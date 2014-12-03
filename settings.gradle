@@ -1,0 +1,3 @@
+include ':DownloadProvider-ui'
+include ':lib:DownloadProvider-lib'
+include ':lib:MyUtil'
