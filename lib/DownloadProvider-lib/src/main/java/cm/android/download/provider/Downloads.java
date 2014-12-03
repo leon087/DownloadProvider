@@ -33,7 +33,7 @@ public final class Downloads {
     /**
      * DownloadProvider authority
      */
-    public static final String AUTHORITY = "me.android.downloads";
+    public static final String AUTHORITY = "cm.android.downloads";
 
     private Downloads() {
     }

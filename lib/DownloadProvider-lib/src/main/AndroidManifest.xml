@@ -72,7 +72,7 @@
     <application android:label="@string/app_label" >
         <provider
             android:name="cm.android.download.providers.downloads.DownloadProvider"
-            android:authorities="me.android.downloads" >
+            android:authorities="cm.android.downloads" >
 
             <!-- Anyone can access /my_downloads, the provider internally restricts access by UID for -->
             <!-- these URIs -->
