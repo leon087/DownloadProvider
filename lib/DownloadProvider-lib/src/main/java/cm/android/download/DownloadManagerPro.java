@@ -7,15 +7,18 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Set;
 
 import cm.android.download.providers.downloads.DownloadManager;
 import cm.android.download.providers.downloads.DownloadService;
 import cm.android.sdk.content.BaseBroadcastReceiver;
-import cm.android.util.MyLog;
 import cm.android.util.ObjectUtil;
 
 public class DownloadManagerPro {
+    private static final Logger logger = LoggerFactory.getLogger("download");
     private DownloadManager downloadManager;
     private Context context;
     private DownloadReceiver downloadReceiver;
@@ -196,7 +199,7 @@ public class DownloadManagerPro {
                         .getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS);
 
                 int status = cursor.getInt(mStatusColumnId);
-                MyLog.i("status = " + status);
+                logger.info("status = " + status);
                 if (status == DownloadManager.STATUS_SUCCESSFUL) {
                     listener.onDownloadSuccess(myDownloadQuery);
                 } else if (status == DownloadManager.STATUS_FAILED) {
