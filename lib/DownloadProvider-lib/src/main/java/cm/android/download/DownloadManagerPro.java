@@ -226,8 +226,6 @@ public class DownloadManagerPro {
         }
     }
 
-    ;
-
     public static interface OnCompleteListener {
         void onDownloadSuccess(DownloadManager.Query downloadQuery);
 
