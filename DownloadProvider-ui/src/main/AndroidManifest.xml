@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cm.android.download.ui"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="cm.android.permission.ACCESS_DOWNLOAD_MANAGER" />
@@ -15,31 +15,32 @@
     <!-- <uses-permission android:name="android.permission.UPDATE_DEVICE_STATS" /> -->
 
     <!--<uses-sdk-->
-        <!--android:minSdkVersion="16"-->
-        <!--android:targetSdkVersion="19" />-->
+    <!--android:minSdkVersion="16"-->
+    <!--android:targetSdkVersion="19" />-->
 
     <application
         android:icon="@mipmap/ic_launcher_download"
-        android:label="@string/app_label" >
+        android:label="@string/app_label">
 
         <activity
             android:name="com.android.providers.downloads.ui.DownloadList"
+            android:exported="false"
             android:launchMode="singleTop"
-            android:theme="@android:style/Theme.Holo.DialogWhenLarge" >
+            android:theme="@android:style/Theme.Holo.DialogWhenLarge">
             <!--<intent-filter>-->
-                <!-- <action android:name="android.intent.action.MAIN" /> -->
-                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
             <!--</intent-filter>-->
             <intent-filter>
-                <action android:name="android.intent.action.VIEW_DOWNLOADS" />
+                <action android:name="cm.android.intent.action.VIEW_DOWNLOADS" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
-            android:name="com.android.providers.downloads.ui.DownloadProviderActivity"
+            android:name="com.android.providers.downloads.ui.MainActivity"
             android:launchMode="singleTop"
-            android:theme="@android:style/Theme.Holo.DialogWhenLarge" >
+            android:theme="@android:style/Theme.Holo.DialogWhenLarge">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

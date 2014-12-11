@@ -16,13 +16,6 @@
 
 package com.android.providers.downloads.ui;
 
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
-import cm.android.download.providers.downloads.DownloadManager;
-import cm.android.download.ui.R;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -32,6 +25,14 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import cm.android.download.DownloadManager;
+import cm.android.download.ui.R;
 
 /**
  * List adapter for Cursors returned by {@link DownloadManager}.

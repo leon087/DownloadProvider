@@ -16,10 +16,6 @@
 
 package com.android.providers.downloads.ui;
 
-import java.util.Vector;
-
-import cm.android.download.providers.downloads.DownloadManager;
-import cm.android.download.ui.R;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -32,6 +28,11 @@ import android.webkit.DateSorter;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+
+import java.util.Vector;
+
+import cm.android.download.DownloadManager;
+import cm.android.download.ui.R;
 
 /**
  * ExpandableListAdapter which separates data into categories based on date.  Copied from

@@ -16,26 +16,10 @@
 
 package com.android.providers.downloads.ui;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import cm.android.download.provider.Downloads;
-import cm.android.download.providers.downloads.Constants;
-import cm.android.download.providers.downloads.DownloadManager;
-import cm.android.download.providers.downloads.OpenHelper;
-import cm.android.download.ui.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.ContentUris;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
@@ -63,6 +47,22 @@ import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import cm.android.download.DownloadManager;
+import cm.android.download.provider.Downloads;
+import cm.android.download.providers.downloads.Constants;
+import cm.android.download.providers.downloads.OpenHelper;
+import cm.android.download.ui.R;
 
 /**
  * View showing a list of all downloads the Download Manager knows about.

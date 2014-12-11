@@ -16,33 +16,11 @@
 
 package cm.android.download.providers.downloads;
 
-import static android.text.format.DateUtils.SECOND_IN_MILLIS;
-import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
-import static java.net.HttpURLConnection.HTTP_MOVED_PERM;
-import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
-import static java.net.HttpURLConnection.HTTP_OK;
-import static java.net.HttpURLConnection.HTTP_PARTIAL;
-import static java.net.HttpURLConnection.HTTP_SEE_OTHER;
-import static java.net.HttpURLConnection.HTTP_UNAVAILABLE;
-import static cm.android.download.provider.Downloads.Impl.STATUS_BAD_REQUEST;
-import static cm.android.download.provider.Downloads.Impl.STATUS_CANNOT_RESUME;
-import static cm.android.download.provider.Downloads.Impl.STATUS_FILE_ERROR;
-import static cm.android.download.provider.Downloads.Impl.STATUS_HTTP_DATA_ERROR;
-import static cm.android.download.provider.Downloads.Impl.STATUS_TOO_MANY_REDIRECTS;
-import static cm.android.download.provider.Downloads.Impl.STATUS_WAITING_FOR_NETWORK;
-import static cm.android.download.provider.Downloads.Impl.STATUS_WAITING_TO_RETRY;
-import static cm.android.download.providers.downloads.Constants.TAG;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.drm.DrmManagerClient;
-//import android.drm.DrmOutputStream;
-import android.net.ConnectivityManager;
-//import android.net.INetworkPolicyListener;
 import android.net.NetworkInfo;
-//import android.net.NetworkPolicyManager;
 import android.net.TrafficStats;
-//import android.os.FileUtils;
 import android.os.PowerManager;
 import android.os.Process;
 import android.os.SystemClock;
@@ -56,7 +34,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.RandomAccessFile;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -64,6 +41,28 @@ import java.net.URLConnection;
 
 import cm.android.download.provider.Downloads;
 import cm.android.download.providers.downloads.DownloadInfo.NetworkState;
+
+import static android.text.format.DateUtils.SECOND_IN_MILLIS;
+import static cm.android.download.provider.Downloads.Impl.STATUS_BAD_REQUEST;
+import static cm.android.download.provider.Downloads.Impl.STATUS_CANNOT_RESUME;
+import static cm.android.download.provider.Downloads.Impl.STATUS_FILE_ERROR;
+import static cm.android.download.provider.Downloads.Impl.STATUS_HTTP_DATA_ERROR;
+import static cm.android.download.provider.Downloads.Impl.STATUS_TOO_MANY_REDIRECTS;
+import static cm.android.download.provider.Downloads.Impl.STATUS_WAITING_FOR_NETWORK;
+import static cm.android.download.provider.Downloads.Impl.STATUS_WAITING_TO_RETRY;
+import static cm.android.download.providers.downloads.Constants.TAG;
+import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
+import static java.net.HttpURLConnection.HTTP_MOVED_PERM;
+import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
+import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.HTTP_PARTIAL;
+import static java.net.HttpURLConnection.HTTP_SEE_OTHER;
+import static java.net.HttpURLConnection.HTTP_UNAVAILABLE;
+
+//import android.net.INetworkPolicyListener;
+//import android.net.NetworkPolicyManager;
+//import android.os.FileUtils;
+//import android.drm.DrmOutputStream;
 
 //import libcore.io.IoUtils;
 
@@ -90,7 +89,7 @@ public class DownloadThread implements Runnable {
     private volatile boolean mPolicyDirty;
 
     public DownloadThread(Context context, SystemFacade systemFacade, DownloadInfo info,
-            StorageManager storageManager, DownloadNotifier notifier) {
+                          StorageManager storageManager, DownloadNotifier notifier) {
         mContext = context;
         mSystemFacade = systemFacade;
         mInfo = info;
@@ -126,11 +125,17 @@ public class DownloadThread implements Runnable {
         public long mTimeLastNotification = 0;
         public int mNetworkType = 0;//ConnectivityManager.TYPE_NONE; // TODO
 
-        /** Historical bytes/second speed of this download. */
+        /**
+         * Historical bytes/second speed of this download.
+         */
         public long mSpeed;
-        /** Time when current sample started. */
+        /**
+         * Time when current sample started.
+         */
         public long mSpeedSampleStart;
-        /** Bytes transferred since current sample started. */
+        /**
+         * Bytes transferred since current sample started.
+         */
         public long mSpeedSampleBytes;
 
         public long mContentLength = -1;
@@ -142,7 +147,7 @@ public class DownloadThread implements Runnable {
 
         public State(DownloadInfo info) {
 //            mMimeType = Intent.normalizeMimeType(info.mMimeType); 
-        	mMimeType = info.mMimeType; // TODO
+            mMimeType = info.mMimeType; // TODO
             mRequestUri = info.mUri;
             mFilename = info.mFileName;
             mTotalBytes = info.mTotalBytes;
@@ -293,7 +298,7 @@ public class DownloadThread implements Runnable {
         // skip when already finished; remove after fixing race in 5217390
         if (state.mCurrentBytes == state.mTotalBytes) {
             Log.i(Constants.TAG, "Skipping initiating request for download " +
-                  mInfo.mId + "; already completed");
+                    mInfo.mId + "; already completed");
             return;
         }
 
@@ -393,8 +398,8 @@ public class DownloadThread implements Runnable {
 ////                    out = new DrmOutputStream(drmClient, file, state.mMimeType); // TODO
 //                    outFd = file.getFD();
 //                } else {
-                    out = new FileOutputStream(state.mFilename, true);
-                    outFd = ((FileOutputStream) out).getFD();
+                out = new FileOutputStream(state.mFilename, true);
+                outFd = ((FileOutputStream) out).getFD();
 //                }
             } catch (IOException e) {
                 throw new StopRequestException(STATUS_FILE_ERROR, e);
@@ -403,7 +408,7 @@ public class DownloadThread implements Runnable {
             // Start streaming data, periodically watch for pause/cancel
             // commands and checking disk space as needed.
             transferData(state, in, out);
-         // TODO
+            // TODO
 //            try {
 //                if (out instanceof DrmOutputStream) {
 //                    ((DrmOutputStream) out).finish();
@@ -457,7 +462,7 @@ public class DownloadThread implements Runnable {
     private void transferData(State state, InputStream in, OutputStream out)
             throws StopRequestException {
         final byte data[] = new byte[Constants.BUFFER_SIZE];
-        for (;;) {
+        for (; ; ) {
             int bytesRead = readFromResponse(state, data, in);
             if (bytesRead == -1) { // success, end of stream already reached
                 handleEndOfStream(state);
@@ -471,7 +476,7 @@ public class DownloadThread implements Runnable {
 
             if (Constants.LOGVV) {
                 Log.v(Constants.TAG, "downloaded " + state.mCurrentBytes + " for "
-                      + mInfo.mUri);
+                        + mInfo.mUri);
             }
 
             checkPausedOrCanceled(state);
@@ -486,7 +491,7 @@ public class DownloadThread implements Runnable {
 //            // make sure the file is readable
 //            FileUtils.setPermissions(state.mFilename, 0644, -1, -1);
 //        }
-    	// TODO
+        // TODO
     }
 
     /**
@@ -551,7 +556,7 @@ public class DownloadThread implements Runnable {
         }
 
         if (state.mCurrentBytes - state.mBytesNotified > Constants.MIN_PROGRESS_STEP &&
-            now - state.mTimeLastNotification > Constants.MIN_PROGRESS_TIME) {
+                now - state.mTimeLastNotification > Constants.MIN_PROGRESS_TIME) {
             ContentValues values = new ContentValues();
             values.put(Downloads.Impl.COLUMN_CURRENT_BYTES, state.mCurrentBytes);
             mContext.getContentResolver().update(mInfo.getAllDownloadsUri(), values, null, null);
@@ -562,7 +567,8 @@ public class DownloadThread implements Runnable {
 
     /**
      * Write a data buffer to the destination file.
-     * @param data buffer containing the data to write
+     *
+     * @param data      buffer containing the data to write
      * @param bytesRead how many bytes to write from the buffer
      */
     private void writeDataToDestination(State state, byte[] data, int bytesRead, OutputStream out)
@@ -621,7 +627,8 @@ public class DownloadThread implements Runnable {
 
     /**
      * Read some data from the HTTP response stream, handling I/O errors.
-     * @param data buffer to use to read data
+     *
+     * @param data         buffer to use to read data
      * @param entityStream stream for reading the HTTP response entity
      * @return the number of bytes actually read or -1 if the end of the stream has been reached
      */

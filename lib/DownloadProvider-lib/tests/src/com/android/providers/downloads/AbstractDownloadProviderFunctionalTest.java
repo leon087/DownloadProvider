@@ -16,8 +16,6 @@
 
 package com.android.providers.downloads;
 
-import static org.mockito.Mockito.mock;
-
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -45,6 +43,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
+
+import static org.mockito.Mockito.mock;
 
 public abstract class AbstractDownloadProviderFunctionalTest extends
         ServiceTestCase<DownloadService> {

@@ -20,7 +20,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-import cm.android.download.providers.downloads.DownloadManager;
+import cm.android.download.DownloadManager;
 
 //import android.net.NetworkPolicyManager;
 

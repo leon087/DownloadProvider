@@ -16,11 +16,6 @@
 
 package cm.android.download.providers.downloads;
 
-import java.util.LinkedList;
-import java.util.Queue;
-
-import cm.android.download.R;
-import cm.android.download.provider.Downloads;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -31,6 +26,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.text.format.Formatter;
 import android.util.Log;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+import cm.android.download.R;
+import cm.android.download.provider.Downloads;
 
 /**
  * Activity to show dialogs to the user when a download exceeds a limit on download sizes for

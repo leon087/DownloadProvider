@@ -16,7 +16,6 @@
 
 package cm.android.download.providers.downloads;
 
-import cm.android.download.providers.downloads.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -24,6 +23,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+
+import cm.android.download.DownloadManager;
+import cm.android.download.provider.Downloads;
 
 class RealSystemFacade implements SystemFacade {
     private Context mContext;
@@ -39,14 +41,14 @@ class RealSystemFacade implements SystemFacade {
 
     @Override
     public NetworkInfo getActiveNetworkInfo(int uid) {
-        ConnectivityManager connectivity =
-                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivity = (ConnectivityManager) mContext
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity == null) {
             Log.w(Constants.TAG, "couldn't get connectivity manager");
             return null;
         }
 
-        final NetworkInfo activeInfo = connectivity.getActiveNetworkInfo(); // FIXME transfermanager : used to be getActiveNetworkInfoForUid(uid);
+        final NetworkInfo activeInfo = connectivity.getActiveNetworkInfo(); // FIXME transfermanager:used to be getActiveNetworkInfoForUid(uid);
         if (activeInfo == null && Constants.LOGVV) {
             Log.v(Constants.TAG, "network is not available");
         }
@@ -55,15 +57,17 @@ class RealSystemFacade implements SystemFacade {
 
     @Override
     public boolean isActiveNetworkMetered() {
-    	return false; // FIXME transfermanager
-//        final ConnectivityManager conn = ConnectivityManager.from(mContext);
-//        return conn.isActiveNetworkMetered();
+        // ggg
+        // final ConnectivityManager conn = ConnectivityManager.from(mContext);
+        ConnectivityManager conn = (ConnectivityManager) mContext
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        return conn.isActiveNetworkMetered();
     }
 
     @Override
     public boolean isNetworkRoaming() {
-        ConnectivityManager connectivity =
-            (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivity = (ConnectivityManager) mContext
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity == null) {
             Log.w(Constants.TAG, "couldn't get connectivity manager");
             return false;
@@ -72,17 +76,16 @@ class RealSystemFacade implements SystemFacade {
         NetworkInfo info = connectivity.getActiveNetworkInfo();
         boolean isMobile = (info != null && info.getType() == ConnectivityManager.TYPE_MOBILE);
         boolean isRoaming = isMobile && _isNetworkRoaming();
-//        boolean isRoaming = isMobile && TelephonyManager.getDefault().isNetworkRoaming();
         if (Constants.LOGVV && isRoaming) {
             Log.v(Constants.TAG, "network is roaming");
         }
         return isRoaming;
     }
-    
-    // FIXME is this the equivelent to getDefault?
+
     private boolean _isNetworkRoaming() {
-    	TelephonyManager telephonyManager = (TelephonyManager) mContext.getSystemService(Context.TELEPHONY_SERVICE);
-    	return telephonyManager.isNetworkRoaming();
+        TelephonyManager telephonyManager = (TelephonyManager) mContext
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        return telephonyManager.isNetworkRoaming();
     }
 
     @Override
@@ -97,11 +100,13 @@ class RealSystemFacade implements SystemFacade {
 
     @Override
     public void sendBroadcast(Intent intent) {
-        mContext.sendBroadcast(intent);
+        // ggg
+        mContext.sendBroadcast(intent, Downloads.Impl.PERMISSION_ACCESS);
     }
 
     @Override
-    public boolean userOwnsPackage(int uid, String packageName) throws NameNotFoundException {
+    public boolean userOwnsPackage(int uid, String packageName)
+            throws NameNotFoundException {
         return mContext.getPackageManager().getApplicationInfo(packageName, 0).uid == uid;
     }
 }

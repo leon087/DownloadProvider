@@ -14,8 +14,7 @@
      limitations under the License.
  -->
 
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="app_label" msgid="3070921713463294774">"Hämtningar"</string>
     <string name="download_title_sorted_by_date" msgid="5898014492155434221">"Hämtade filer – sorterade efter datum"</string>
     <string name="download_title_sorted_by_size" msgid="1417193166677094813">"Hämtade filer – sorterade efter storlek"</string>

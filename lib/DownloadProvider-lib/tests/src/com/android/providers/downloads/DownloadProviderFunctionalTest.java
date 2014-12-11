@@ -16,9 +16,6 @@
 
 package com.android.providers.downloads;
 
-import static android.text.format.DateUtils.SECOND_IN_MILLIS;
-import static java.net.HttpURLConnection.HTTP_OK;
-
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -35,6 +32,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeoutException;
+
+import static android.text.format.DateUtils.SECOND_IN_MILLIS;
+import static java.net.HttpURLConnection.HTTP_OK;
 
 /**
  * This test exercises the entire download manager working together -- it requests downloads through

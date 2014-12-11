@@ -16,16 +16,12 @@
 
 package cm.android.download.providers.downloads;
 
-import static cm.android.download.providers.downloads.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
-import static cm.android.download.providers.downloads.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION;
-import cm.android.download.R;
-import cm.android.download.provider.Downloads;
 import android.content.ActivityNotFoundException;
-import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -38,10 +34,18 @@ import android.widget.Toast;
 
 import com.google.common.annotations.VisibleForTesting;
 
+import cm.android.download.DownloadManager;
+import cm.android.download.R;
+import cm.android.download.provider.Downloads;
+import cm.android.sdk.content.BaseBroadcastReceiver;
+
+import static cm.android.download.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
+import static cm.android.download.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION;
+
 /**
  * Receives system broadcasts (boot, network connectivity)
  */
-public class DownloadReceiver extends BroadcastReceiver {
+public class DownloadReceiver extends BaseBroadcastReceiver {
     private static final String TAG = "DownloadReceiver";
 
     private static Handler sAsyncHandler;
@@ -62,16 +66,19 @@ public class DownloadReceiver extends BroadcastReceiver {
         }
 
         String action = intent.getAction();
-        if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
+        // ggg
+        // if (action.equals(Intent.ACTION_BOOT_COMPLETED)) {
+        // if (Constants.LOGVV) {
+        // Log.v(Constants.TAG, "Received broadcast intent for " +
+        // Intent.ACTION_BOOT_COMPLETED);
+        // }
+        // startService(context);
+        // } else
+
+        if (action.equals(Intent.ACTION_MEDIA_MOUNTED)) {
             if (Constants.LOGVV) {
-                Log.v(Constants.TAG, "Received broadcast intent for " +
-                        Intent.ACTION_BOOT_COMPLETED);
-            }
-            startService(context);
-        } else if (action.equals(Intent.ACTION_MEDIA_MOUNTED)) {
-            if (Constants.LOGVV) {
-                Log.v(Constants.TAG, "Received broadcast intent for " +
-                        Intent.ACTION_MEDIA_MOUNTED);
+                Log.v(Constants.TAG, "Received broadcast intent for "
+                        + Intent.ACTION_MEDIA_MOUNTED);
             }
             startService(context);
         } else if (action.equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
@@ -109,8 +116,8 @@ public class DownloadReceiver extends BroadcastReceiver {
     private void handleNotificationBroadcast(Context context, Intent intent) {
         final String action = intent.getAction();
         if (Constants.ACTION_LIST.equals(action)) {
-            final long[] ids = intent.getLongArrayExtra(
-                    DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS);
+            final long[] ids = intent
+                    .getLongArrayExtra(DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS);
             sendNotificationClickedIntent(context, ids);
 
         } else if (Constants.ACTION_OPEN.equals(action)) {
@@ -132,8 +139,10 @@ public class DownloadReceiver extends BroadcastReceiver {
         final int status;
         final int visibility;
 
-        final Uri uri = ContentUris.withAppendedId(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI, id);
-        final Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        final Uri uri = ContentUris.withAppendedId(
+                Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI, id);
+        final Cursor cursor = context.getContentResolver().query(uri, null,
+                null, null, null);
         try {
             if (cursor.moveToFirst()) {
                 status = getInt(cursor, Downloads.Impl.COLUMN_STATUS);
@@ -146,9 +155,8 @@ public class DownloadReceiver extends BroadcastReceiver {
             cursor.close();
         }
 
-        if (Downloads.Impl.isStatusCompleted(status) &&
-                (visibility == VISIBILITY_VISIBLE_NOTIFY_COMPLETED
-                || visibility == VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION)) {
+        if (Downloads.Impl.isStatusCompleted(status)
+                && (visibility == VISIBILITY_VISIBLE_NOTIFY_COMPLETED || visibility == VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION)) {
             final ContentValues values = new ContentValues();
             values.put(Downloads.Impl.COLUMN_VISIBILITY,
                     Downloads.Impl.VISIBILITY_VISIBLE);
@@ -167,8 +175,8 @@ public class DownloadReceiver extends BroadcastReceiver {
             context.startActivity(intent);
         } catch (ActivityNotFoundException ex) {
             Log.d(Constants.TAG, "no activity for " + intent, ex);
-            Toast.makeText(context, R.string.download_no_application_title, Toast.LENGTH_LONG)
-                    .show();
+            Toast.makeText(context, R.string.download_no_application_title,
+                    Toast.LENGTH_LONG).show();
         }
     }
 
@@ -182,12 +190,16 @@ public class DownloadReceiver extends BroadcastReceiver {
 
         final Uri uri = ContentUris.withAppendedId(
                 Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI, ids[0]);
-        final Cursor cursor = context.getContentResolver().query(uri, null, null, null, null);
+        final Cursor cursor = context.getContentResolver().query(uri, null,
+                null, null, null);
         try {
             if (cursor.moveToFirst()) {
-                packageName = getString(cursor, Downloads.Impl.COLUMN_NOTIFICATION_PACKAGE);
-                clazz = getString(cursor, Downloads.Impl.COLUMN_NOTIFICATION_CLASS);
-                isPublicApi = getInt(cursor, Downloads.Impl.COLUMN_IS_PUBLIC_API) != 0;
+                packageName = getString(cursor,
+                        Downloads.Impl.COLUMN_NOTIFICATION_PACKAGE);
+                clazz = getString(cursor,
+                        Downloads.Impl.COLUMN_NOTIFICATION_CLASS);
+                isPublicApi = getInt(cursor,
+                        Downloads.Impl.COLUMN_IS_PUBLIC_API) != 0;
             } else {
                 Log.w(TAG, "Missing details for download " + ids[0]);
                 return;
@@ -205,7 +217,8 @@ public class DownloadReceiver extends BroadcastReceiver {
         if (isPublicApi) {
             appIntent = new Intent(DownloadManager.ACTION_NOTIFICATION_CLICKED);
             appIntent.setPackage(packageName);
-            appIntent.putExtra(DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS, ids);
+            appIntent.putExtra(
+                    DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS, ids);
 
         } else { // legacy behavior
             if (TextUtils.isEmpty(clazz)) {
@@ -215,7 +228,8 @@ public class DownloadReceiver extends BroadcastReceiver {
 
             appIntent = new Intent(DownloadManager.ACTION_NOTIFICATION_CLICKED);
             appIntent.setClassName(packageName, clazz);
-            appIntent.putExtra(DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS, ids);
+            appIntent.putExtra(
+                    DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS, ids);
 
             if (ids.length == 1) {
                 appIntent.setData(uri);
@@ -237,5 +251,16 @@ public class DownloadReceiver extends BroadcastReceiver {
 
     private void startService(Context context) {
         context.startService(new Intent(context, DownloadService.class));
+    }
+
+    @Override
+    public IntentFilter createIntentFilter() {
+        IntentFilter filter = new IntentFilter();
+//        filter.addAction("android.intent.action.BOOT_COMPLETED");
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        //
+        filter.addAction("android.intent.action.MEDIA_MOUNTED");
+        filter.addDataScheme("file");
+        return filter;
     }
 }

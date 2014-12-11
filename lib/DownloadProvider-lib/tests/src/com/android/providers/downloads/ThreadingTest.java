@@ -16,12 +16,10 @@
 
 package com.android.providers.downloads;
 
-import static java.net.HttpURLConnection.HTTP_OK;
-
-import com.android.providers.downloads.DownloadManager;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.util.Pair;
 
+import com.android.providers.downloads.DownloadManager;
 import com.google.android.collect.Lists;
 import com.google.android.collect.Sets;
 import com.google.mockwebserver.MockResponse;
@@ -29,6 +27,8 @@ import com.google.mockwebserver.SocketPolicy;
 
 import java.util.List;
 import java.util.Set;
+
+import static java.net.HttpURLConnection.HTTP_OK;
 
 /**
  * Download manager tests that require multithreading.

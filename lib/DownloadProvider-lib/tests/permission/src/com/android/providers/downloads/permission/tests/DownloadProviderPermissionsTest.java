@@ -16,16 +16,16 @@
 
 package com.android.providers.downloads.permission.tests;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.provider.Downloads;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
+
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  * Verify that protected Download provider actions require specific permissions.

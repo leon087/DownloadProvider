@@ -40,10 +40,62 @@ import java.util.concurrent.Future;
 
 import javax.annotation.concurrent.GuardedBy;
 
+import cm.android.download.DownloadManager;
 import cm.android.download.internal.util.IndentingPrintWriter;
 import cm.android.download.provider.Downloads;
 
-import static cm.android.download.provider.Downloads.Impl.*;
+import static cm.android.download.provider.Downloads.Impl.ACTION_DOWNLOAD_COMPLETED;
+import static cm.android.download.provider.Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_ALLOWED_NETWORK_TYPES;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_ALLOW_METERED;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_ALLOW_ROAMING;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_BYPASS_RECOMMENDED_SIZE_LIMIT;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_CONTROL;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_COOKIE_DATA;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_CURRENT_BYTES;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_DELETED;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_DESCRIPTION;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_DESTINATION;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_FAILED_CONNECTIONS;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_FILE_NAME_HINT;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_IS_PUBLIC_API;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_LAST_MODIFICATION;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_MEDIAPROVIDER_URI;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_MIME_TYPE;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_NOTIFICATION_CLASS;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_NOTIFICATION_EXTRAS;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_NOTIFICATION_PACKAGE;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_NO_INTEGRITY;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_REFERER;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_STATUS;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_TITLE;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_TOTAL_BYTES;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_URI;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_USER_AGENT;
+import static cm.android.download.provider.Downloads.Impl.COLUMN_VISIBILITY;
+import static cm.android.download.provider.Downloads.Impl.CONTENT_URI;
+import static cm.android.download.provider.Downloads.Impl.CONTROL_PAUSED;
+import static cm.android.download.provider.Downloads.Impl.DESTINATION_CACHE_PARTITION;
+import static cm.android.download.provider.Downloads.Impl.DESTINATION_CACHE_PARTITION_NOROAMING;
+import static cm.android.download.provider.Downloads.Impl.DESTINATION_CACHE_PARTITION_PURGEABLE;
+import static cm.android.download.provider.Downloads.Impl.DESTINATION_EXTERNAL;
+import static cm.android.download.provider.Downloads.Impl.DESTINATION_FILE_URI;
+import static cm.android.download.provider.Downloads.Impl.DESTINATION_NON_DOWNLOADMANAGER_DOWNLOAD;
+import static cm.android.download.provider.Downloads.Impl.DESTINATION_SYSTEMCACHE_PARTITION;
+import static cm.android.download.provider.Downloads.Impl.RequestHeaders;
+import static cm.android.download.provider.Downloads.Impl.STATUS_DEVICE_NOT_FOUND_ERROR;
+import static cm.android.download.provider.Downloads.Impl.STATUS_INSUFFICIENT_SPACE_ERROR;
+import static cm.android.download.provider.Downloads.Impl.STATUS_PENDING;
+import static cm.android.download.provider.Downloads.Impl.STATUS_QUEUED_FOR_WIFI;
+import static cm.android.download.provider.Downloads.Impl.STATUS_RUNNING;
+import static cm.android.download.provider.Downloads.Impl.STATUS_WAITING_FOR_NETWORK;
+import static cm.android.download.provider.Downloads.Impl.STATUS_WAITING_TO_RETRY;
+import static cm.android.download.provider.Downloads.Impl.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
+import static cm.android.download.provider.Downloads.Impl._DATA;
+import static cm.android.download.provider.Downloads.Impl._ID;
+import static cm.android.download.provider.Downloads.Impl.isStatusCompleted;
+import static cm.android.download.provider.Downloads.Impl.isStatusSuccess;
+import static cm.android.download.provider.Downloads.Impl.statusToString;
 
 /**
  * Stores information about an individual download.

@@ -11,44 +11,46 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import cm.android.download.providers.downloads.DownloadManager;
+import cm.android.download.providers.downloads.DownloadReceiver;
 import cm.android.download.providers.downloads.DownloadService;
 import cm.android.sdk.content.BaseBroadcastReceiver;
 import cm.android.util.ObjectUtil;
 
-public class DownloadManagerPro {
+public final class DownloadManagerPro {
     private static final Logger logger = LoggerFactory.getLogger("download");
     private DownloadManager downloadManager;
     private Context context;
-    private DownloadReceiver downloadReceiver;
-    private volatile boolean isInit = false;
+    private final MyDownloadReceiver myDownloadReceiver = new MyDownloadReceiver();
+    private final AtomicBoolean isInitAtomic = new AtomicBoolean(false);
+    private DownloadReceiver downloadReceiver = new DownloadReceiver();
 
     public void init(Context context) {
-        if (isInit) {
+        if (!isInitAtomic.compareAndSet(false, true)) {
             return;
         }
-        this.context = context;
+
+        this.context = context.getApplicationContext();
         downloadManager = new DownloadManager(context.getContentResolver(),
                 context.getPackageName());
         downloadManager.setAccessAllDownloads(false);
-        startDownloadService(context);
-        downloadReceiver = new DownloadReceiver();
-        downloadReceiver.register(context);
-
-        isInit = true;
+        startDownloadService(this.context);
+        myDownloadReceiver.register(this.context);
+        downloadReceiver.register(this.context);
     }
 
     public void deInit() {
-        if (!isInit) {
+        if (!isInitAtomic.compareAndSet(true, false)) {
             return;
         }
-        isInit = false;
 
         clearListener();
-        stopDownloadService(context);
         downloadReceiver.unregister();
+        stopDownloadService(context);
+        myDownloadReceiver.unregister();
         context = null;
+        downloadManager = null;
     }
 
     private void startDownloadService(Context context) {
@@ -66,9 +68,9 @@ public class DownloadManagerPro {
     public DownloadManager.Request getDefaultRequest(String url) {
         Uri srcUri = Uri.parse(url);
         DownloadManager.Request request = new DownloadManager.Request(srcUri);
-        request.addRequestHeader("User-Agent", "Android"); // 添加一个Http请求报头，
+        // request.addRequestHeader("User-Agent", "Android"); // 添加一个Http请求报头，
 
-        // 设置允许使用的网络类型，这一步Android2.3做的很好，目前有两种定义分别为NETWORK_MOBILE和NETWORK_WIFI我们可以选择使用移动网络或Wifi方式来下载。
+        // 设置允许使用的网络类型
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE
                 | DownloadManager.Request.NETWORK_WIFI);
 
@@ -100,17 +102,16 @@ public class DownloadManagerPro {
         // 设置mime类型，这里看服务器配置，一般国家化的都为utf-8编码。
         // request.setMimeType(String mimeType)
 
-        // request.setVisibleInDownloadsUi(true); //设置下载管理类在处理过程中的界面是否显示
+        request.setVisibleInDownloadsUi(false); // 设置下载管理类在处理过程中的界面是否显示
         return request;
-
     }
 
-    public long start(String url) {
+    public long enqueue(String url) {
         DownloadManager.Request request = getDefaultRequest(url);
-        return start(request);
+        return enqueue(request);
     }
 
-    public long start(DownloadManager.Request request) {
+    public long enqueue(DownloadManager.Request request) {
         // request.setVisibleInDownloadsUi(true); //设置下载管理类在处理过程中的界面是否显示
         long enqueue = downloadManager.enqueue(request);
         return enqueue;
@@ -139,8 +140,8 @@ public class DownloadManagerPro {
      *
      * @param ids
      */
-    public void delete(long... ids) {
-        downloadManager.remove(ids);
+    public int remove(long... ids) {
+        return downloadManager.remove(ids);
     }
 
     /**
@@ -182,10 +183,8 @@ public class DownloadManagerPro {
         return downloadManager.query(query);
     }
 
-    private class DownloadReceiver extends BaseBroadcastReceiver {
-
-        public DownloadReceiver() {
-            super();
+    private class MyDownloadReceiver extends BaseBroadcastReceiver {
+        MyDownloadReceiver() {
         }
 
         @Override

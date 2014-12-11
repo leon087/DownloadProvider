@@ -57,6 +57,8 @@ android {
             minifyEnabled true
             zipAlignEnabled true
 
+            versionNameSuffix "." + buildTime()
+
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
                     new File(project(':lib:MyUtil').getProjectDir(), 'util-proguard-rules.pro'),
@@ -68,7 +70,7 @@ android {
             zipAlignEnabled true
 
             signingConfig signingConfigs.debug
-            versionNameSuffix ".debug." + buildTime()
+            versionNameSuffix "." + buildTime() + ".debug"
         }
 
         beta {
@@ -78,13 +80,13 @@ android {
 
             signingConfig signingConfigs.debug
             debuggable true
-            versionNameSuffix ".beta." + buildTime()
+            versionNameSuffix "." + buildTime() + ".beta"
         }
     }
 }
 
 def buildTime() {
     def date = new Date()
-    def formattedDate = date.format('yyyyMMddHH')
+    def formattedDate = date.format('MMddHH')
     return formattedDate
 }

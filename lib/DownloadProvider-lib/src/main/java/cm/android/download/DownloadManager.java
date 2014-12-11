@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cm.android.download.providers.downloads;
+package cm.android.download;
 
 //import android.annotation.SdkConstant;
 //import android.annotation.SdkConstant.SdkConstantType;
@@ -303,7 +303,7 @@ public class DownloadManager {
      * Intent action to launch an activity to display all downloads.
      */
     // @SdkConstant(SdkConstantType.ACTIVITY_INTENT_ACTION)
-    public final static String ACTION_VIEW_DOWNLOADS = "android.intent.action.VIEW_DOWNLOADS";
+    public final static String ACTION_VIEW_DOWNLOADS = "cm.android.intent.action.VIEW_DOWNLOADS";
 
     /**
      * Intent extra included with {@link #ACTION_VIEW_DOWNLOADS} to start
@@ -350,7 +350,7 @@ public class DownloadManager {
                     + COLUMN_BYTES_DOWNLOADED_SO_FAR,
             Downloads.Impl.COLUMN_ALLOW_WRITE,
             /*
-			 * add the following 'computed' columns to the cursor. they are not
+             * add the following 'computed' columns to the cursor. they are not
 			 * 'returned' by the database, but their inclusion eliminates need
 			 * to have lot of methods in CursorTranslator
 			 */

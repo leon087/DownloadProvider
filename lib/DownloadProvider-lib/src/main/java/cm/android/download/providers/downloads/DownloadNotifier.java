@@ -16,20 +16,6 @@
 
 package cm.android.download.providers.downloads;
 
-import static cm.android.download.provider.Downloads.Impl.STATUS_RUNNING;
-import static cm.android.download.providers.downloads.Constants.TAG;
-import static cm.android.download.providers.downloads.DownloadManager.Request.VISIBILITY_VISIBLE;
-import static cm.android.download.providers.downloads.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
-import static cm.android.download.providers.downloads.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import javax.annotation.concurrent.GuardedBy;
-
-import cm.android.download.R;
-import cm.android.download.provider.Downloads;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -42,11 +28,28 @@ import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 import android.util.Log;
-//import android.util.LongSparseLongArray;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import javax.annotation.concurrent.GuardedBy;
+
+import cm.android.download.DownloadManager;
+import cm.android.download.R;
+import cm.android.download.provider.Downloads;
+
+import static cm.android.download.DownloadManager.Request.VISIBILITY_VISIBLE;
+import static cm.android.download.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
+import static cm.android.download.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION;
+import static cm.android.download.provider.Downloads.Impl.STATUS_RUNNING;
+import static cm.android.download.providers.downloads.Constants.TAG;
+
+//import android.util.LongSparseLongArray;
 
 /**
  * Update {@link NotificationManager} to reflect current {@link DownloadInfo}

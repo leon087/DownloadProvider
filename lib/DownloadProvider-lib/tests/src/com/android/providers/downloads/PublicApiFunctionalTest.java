@@ -16,25 +16,6 @@
 
 package com.android.providers.downloads;
 
-import static com.android.providers.downloads.DownloadManager.STATUS_FAILED;
-import static com.android.providers.downloads.DownloadManager.STATUS_PAUSED;
-import static android.net.TrafficStats.GB_IN_BYTES;
-import static android.text.format.DateUtils.SECOND_IN_MILLIS;
-import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
-import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
-import static java.net.HttpURLConnection.HTTP_OK;
-import static java.net.HttpURLConnection.HTTP_PARTIAL;
-import static java.net.HttpURLConnection.HTTP_PRECON_FAILED;
-import static java.net.HttpURLConnection.HTTP_UNAVAILABLE;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
-import com.android.providers.downloads.DownloadManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -49,6 +30,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.Suppress;
 import android.text.format.DateUtils;
 
+import com.android.providers.downloads.DownloadManager;
 import com.google.mockwebserver.MockResponse;
 import com.google.mockwebserver.RecordedRequest;
 import com.google.mockwebserver.SocketPolicy;
@@ -60,6 +42,24 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
+
+import static android.net.TrafficStats.GB_IN_BYTES;
+import static android.text.format.DateUtils.SECOND_IN_MILLIS;
+import static com.android.providers.downloads.DownloadManager.STATUS_FAILED;
+import static com.android.providers.downloads.DownloadManager.STATUS_PAUSED;
+import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
+import static java.net.HttpURLConnection.HTTP_OK;
+import static java.net.HttpURLConnection.HTTP_PARTIAL;
+import static java.net.HttpURLConnection.HTTP_PRECON_FAILED;
+import static java.net.HttpURLConnection.HTTP_UNAVAILABLE;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @LargeTest
 public class PublicApiFunctionalTest extends AbstractPublicApiTest {

@@ -17,12 +17,13 @@
 
 package com.android.providers.downloads.ui;
 
-import cm.android.download.providers.downloads.DownloadManager;
 import android.database.Cursor;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
+
+import cm.android.download.DownloadManager;
 
 /**
  * Adapter for a date-sorted list of downloads.  Delegates all the real work to

@@ -16,22 +16,23 @@
 
 package com.android.providers.downloads;
 
-import static com.android.providers.downloads.DownloadManager.STATUS_FAILED;
-import static com.android.providers.downloads.DownloadManager.STATUS_SUCCESSFUL;
-import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
-import static android.text.format.DateUtils.SECOND_IN_MILLIS;
-
-import com.android.providers.downloads.DownloadManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.android.providers.downloads.DownloadManager;
+
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.util.concurrent.TimeoutException;
+
+import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
+import static android.text.format.DateUtils.SECOND_IN_MILLIS;
+import static com.android.providers.downloads.DownloadManager.STATUS_FAILED;
+import static com.android.providers.downloads.DownloadManager.STATUS_SUCCESSFUL;
 
 /**
  * Code common to tests that use the download manager public API.

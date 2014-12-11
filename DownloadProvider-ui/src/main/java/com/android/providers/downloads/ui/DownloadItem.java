@@ -16,7 +16,6 @@
 
 package com.android.providers.downloads.ui;
 
-import cm.android.download.ui.R;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -24,6 +23,8 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.CheckBox;
 import android.widget.Checkable;
 import android.widget.GridLayout;
+
+import cm.android.download.ui.R;
 
 /**
  * This class customizes RelativeLayout to directly handle clicks on the left part of the view and

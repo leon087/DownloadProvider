@@ -16,15 +16,12 @@
 
 package cm.android.download.providers.downloads;
 
-import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
-import static cm.android.download.providers.downloads.Constants.TAG;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
@@ -36,15 +33,9 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
 
-import javax.annotation.concurrent.GuardedBy;
-
-import cm.android.download.internal.util.IndentingPrintWriter;
-import cm.android.download.provider.Downloads;
-import cm.android.download.providers.downloads.DownloadManager;
-
-import com.google.common.collect.Maps;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
 import java.io.File;
@@ -60,12 +51,20 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.concurrent.GuardedBy;
+
+import cm.android.download.internal.util.IndentingPrintWriter;
+import cm.android.download.provider.Downloads;
+
+import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
+import static cm.android.download.providers.downloads.Constants.TAG;
+
 /**
  * Performs background downloads as requested by applications that use
- * {@link DownloadManager}. Multiple start commands can be issued at this
+ * {@link cm.android.download.DownloadManager}. Multiple start commands can be issued at this
  * service, and it will continue running until no downloads are being actively
  * processed. It may schedule alarms to resume downloads in future.
- * <p>
+ * <p/>
  * Any database updates important enough to initiate tasks should always be
  * delivered through {@link Context#startService(Intent)}.
  */
@@ -81,10 +80,14 @@ public class DownloadService extends Service {
     private AlarmManager mAlarmManager;
     private StorageManager mStorageManager;
 
-    /** Observer to get notified when the content observer's data changes */
+    /**
+     * Observer to get notified when the content observer's data changes
+     */
     private DownloadManagerContentObserver mObserver;
 
-    /** Class to handle Notification Manager updates */
+    /**
+     * Class to handle Notification Manager updates
+     */
     private DownloadNotifier mNotifier;
 
     /**
@@ -99,7 +102,7 @@ public class DownloadService extends Service {
     private final ExecutorService mExecutor = buildDownloadExecutor();
 
     private static ExecutorService buildDownloadExecutor() {
-    	final int maxConcurrent = 5; // FIXME transfermanager
+        final int maxConcurrent = 5; // FIXME transfermanager
 //        final int maxConcurrent = Resources.getSystem().getInteger(
 //                com.android.internal.R.integer.config_MaxConcurrentDownloadsAllowed);
 
@@ -285,12 +288,12 @@ public class DownloadService extends Service {
      * Depending on current download state it may enqueue {@link DownloadThread}
      * instances, request {@link DownloadScanner} scans, update user-visible
      * notifications, and/or schedule future actions with {@link AlarmManager}.
-     * <p>
+     * <p/>
      * Should only be called from {@link #mUpdateThread} as after being
      * requested through {@link #enqueueUpdate()}.
      *
      * @return If there are active tasks being processed, as of the database
-     *         snapshot taken in this update.
+     * snapshot taken in this update.
      */
     private boolean updateLocked() {
         final long now = mSystemFacade.currentTimeMillis();

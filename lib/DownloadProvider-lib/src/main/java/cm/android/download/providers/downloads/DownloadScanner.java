@@ -16,9 +16,6 @@
 
 package cm.android.download.providers.downloads;
 
-import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
-import static cm.android.download.providers.downloads.Constants.LOGV;
-import static cm.android.download.providers.downloads.Constants.TAG;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -29,13 +26,17 @@ import android.net.Uri;
 import android.os.SystemClock;
 import android.util.Log;
 
+import com.google.common.collect.Maps;
+
+import java.util.HashMap;
+
 import javax.annotation.concurrent.GuardedBy;
 
 import cm.android.download.provider.Downloads;
 
-import com.google.common.collect.Maps;
-
-import java.util.HashMap;
+import static android.text.format.DateUtils.MINUTE_IN_MILLIS;
+import static cm.android.download.providers.downloads.Constants.LOGV;
+import static cm.android.download.providers.downloads.Constants.TAG;
 
 /**
  * Manages asynchronous scanning of completed downloads.

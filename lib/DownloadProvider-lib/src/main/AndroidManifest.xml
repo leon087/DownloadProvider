@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cm.android.download"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="1.0">
 
     <!-- Allows access to the Download Manager -->
     <permission
@@ -65,14 +65,14 @@
     <uses-permission android:name="android.permission.CONNECTIVITY_INTERNAL" />
     <uses-permission android:name="android.permission.MODIFY_NETWORK_ACCOUNTING" />
 
-    <!--<uses-sdk-->
-        <!--android:minSdkVersion="15"-->
-        <!--android:targetSdkVersion="15" />-->
+    <!-- <uses-sdk -->
+    <!-- android:minSdkVersion="15" -->
+    <!-- android:targetSdkVersion="15" /> -->
 
-    <application android:label="@string/app_label" >
+    <application android:label="@string/app_label">
         <provider
             android:name="cm.android.download.providers.downloads.DownloadProvider"
-            android:authorities="cm.android.downloads" >
+            android:authorities="cm.android.downloads">
 
             <!-- Anyone can access /my_downloads, the provider internally restricts access by UID for -->
             <!-- these URIs -->
@@ -101,16 +101,16 @@
 
         <receiver
             android:name="cm.android.download.providers.downloads.DownloadReceiver"
-            android:exported="false" >
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_MOUNTED" />
-
-                <data android:scheme="file" />
-            </intent-filter>
+            android:exported="false">
+            <!-- ggg -->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.BOOT_COMPLETED" /> -->
+            <!-- <action android:name="android.net.conn.CONNECTIVITY_CHANGE" /> -->
+            <!-- </intent-filter> -->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MEDIA_MOUNTED" /> -->
+            <!-- <data android:scheme="file" /> -->
+            <!-- </intent-filter> -->
         </receiver>
 
         <activity

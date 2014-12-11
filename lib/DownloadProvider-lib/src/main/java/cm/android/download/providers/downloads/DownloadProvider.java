@@ -16,19 +16,6 @@
 
 package cm.android.download.providers.downloads;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import cm.android.download.provider.Downloads;
-import cm.android.download.providers.downloads.DownloadManager.Request;
 import android.content.ContentProvider;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -54,6 +41,21 @@ import android.util.Log;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import cm.android.download.DownloadManager;
+import cm.android.download.DownloadManager.Request;
+import cm.android.download.provider.Downloads;
 
 //import android.os.SELinux;
 
@@ -94,7 +96,7 @@ public final class DownloadProvider extends ContentProvider {
 	private static final int REQUEST_HEADERS_URI = 5;
 	/**
 	 * URI matcher constant for the public URI returned by
-	 * {@link DownloadManager#getUriForDownloadedFile(long)} if the given
+	 * {@link cm.android.download.DownloadManager#getUriForDownloadedFile(long)} if the given
 	 * downloaded file is publicly accessible.
 	 */
 	private static final int PUBLIC_DOWNLOAD_ID = 6;
