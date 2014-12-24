@@ -16,6 +16,8 @@
 
 package cm.android.download.providers.downloads;
 
+import com.google.common.annotations.VisibleForTesting;
+
 import android.content.ActivityNotFoundException;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -32,8 +34,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.common.annotations.VisibleForTesting;
-
 import cm.android.download.DownloadManager;
 import cm.android.download.R;
 import cm.android.download.provider.Downloads;
@@ -46,6 +46,7 @@ import static cm.android.download.DownloadManager.Request.VISIBILITY_VISIBLE_NOT
  * Receives system broadcasts (boot, network connectivity)
  */
 public class DownloadReceiver extends BaseBroadcastReceiver {
+
     private static final String TAG = "DownloadReceiver";
 
     private static Handler sAsyncHandler;
@@ -156,7 +157,8 @@ public class DownloadReceiver extends BaseBroadcastReceiver {
         }
 
         if (Downloads.Impl.isStatusCompleted(status)
-                && (visibility == VISIBILITY_VISIBLE_NOTIFY_COMPLETED || visibility == VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION)) {
+                && (visibility == VISIBILITY_VISIBLE_NOTIFY_COMPLETED
+                || visibility == VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION)) {
             final ContentValues values = new ContentValues();
             values.put(Downloads.Impl.COLUMN_VISIBILITY,
                     Downloads.Impl.VISIBILITY_VISIBLE);

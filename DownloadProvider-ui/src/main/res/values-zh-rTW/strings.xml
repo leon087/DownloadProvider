@@ -29,12 +29,18 @@
     <string name="dialog_title_not_available" msgid="5746317632356158515">"無法下載"</string>
     <string name="dialog_failed_body" msgid="587545111677064427">"您要日後再重試下載檔案，或是從佇列中刪除檔案？"</string>
     <string name="dialog_title_queued_body" msgid="6760681913815015219">"佇列中的檔案"</string>
-    <string name="dialog_queued_body" msgid="708552801635572720">"檔案已排入之後要下載的佇列中，因此目前尚無法取得。"</string>
+    <string name="dialog_queued_body" msgid="708552801635572720">"檔案已排入之後要下載的佇列中，因此目前尚無法取得。"
+    </string>
     <string name="dialog_file_missing_body" msgid="3223012612774276284">"找不到下載的檔案。"</string>
-    <string name="dialog_insufficient_space_on_external" msgid="8692452156251449195">"無法完成下載，外部儲存裝置空間不足。"</string>
-    <string name="dialog_insufficient_space_on_cache" msgid="6313630206163908994">"無法完成下載，內部下載儲存空間不足。"</string>
+    <string name="dialog_insufficient_space_on_external" msgid="8692452156251449195">
+        "無法完成下載，外部儲存裝置空間不足。"
+    </string>
+    <string name="dialog_insufficient_space_on_cache" msgid="6313630206163908994">
+        "無法完成下載，內部下載儲存空間不足。"
+    </string>
     <string name="dialog_cannot_resume" msgid="8664509751358983543">"下載中斷，無法恢復下載。"</string>
-    <string name="dialog_file_already_exists" msgid="8308563940663449590">"無法下載，目標位置已有相同檔案。"</string>
+    <string name="dialog_file_already_exists" msgid="8308563940663449590">"無法下載，目標位置已有相同檔案。"
+    </string>
     <string name="dialog_media_not_found" msgid="4468088418758018765">"無法下載，找不到外部媒體。"</string>
     <string name="download_no_application_title" msgid="7024782176657362251">"無法開啟檔案"</string>
     <string name="remove_download" msgid="6372920256257247857">"移除"</string>
@@ -44,6 +50,11 @@
     <string name="retry_download" msgid="7617100787922717912">"重試"</string>
     <string name="deselect_all" msgid="6348198946254776764">"全部取消選取"</string>
     <string name="select_all" msgid="634074918366265804">"全選"</string>
-    <string name="selected_count" msgid="2101564570019753277">"已選取 <xliff:g id="NUMBER">%1$d</xliff:g> 個，共 <xliff:g id="TOTAL">%2$d</xliff:g> 個"</string>
+    <string name="selected_count" msgid="2101564570019753277">"已選取
+        <xliff:g id="NUMBER">%1$d</xliff:g>
+        個，共
+        <xliff:g id="TOTAL">%2$d</xliff:g>
+        個"
+    </string>
     <string name="download_share_dialog" msgid="3355867339806448955">"分享方式："</string>
 </resources>

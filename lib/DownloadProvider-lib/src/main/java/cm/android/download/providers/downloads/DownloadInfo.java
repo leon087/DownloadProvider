@@ -105,7 +105,9 @@ public class DownloadInfo {
     // periodically pushing to provider.
 
     public static class Reader {
+
         private ContentResolver mResolver;
+
         private Cursor mCursor;
 
         public Reader(ContentResolver resolver, Cursor cursor) {
@@ -114,7 +116,7 @@ public class DownloadInfo {
         }
 
         public DownloadInfo newDownloadInfo(Context context, SystemFacade systemFacade,
-                                            StorageManager storageManager, DownloadNotifier notifier) {
+                StorageManager storageManager, DownloadNotifier notifier) {
             final DownloadInfo info = new DownloadInfo(
                     context, systemFacade, storageManager, notifier);
             updateFromDatabase(info);
@@ -258,37 +260,69 @@ public class DownloadInfo {
     public static final String EXTRA_IS_WIFI_REQUIRED = "isWifiRequired";
 
     public long mId;
+
     public String mUri;
+
     public boolean mNoIntegrity;
+
     public String mHint;
+
     public String mFileName;
+
     public String mMimeType;
+
     public int mDestination;
+
     public int mVisibility;
+
     public int mControl;
+
     public int mStatus;
+
     public int mNumFailed;
+
     public int mRetryAfter;
+
     public long mLastMod;
+
     public String mPackage;
+
     public String mClass;
+
     public String mExtras;
+
     public String mCookies;
+
     public String mUserAgent;
+
     public String mReferer;
+
     public long mTotalBytes;
+
     public long mCurrentBytes;
+
     public String mETag;
+
     public int mUid;
+
     public int mMediaScanned;
+
     public boolean mDeleted;
+
     public String mMediaProviderUri;
+
     public boolean mIsPublicApi;
+
     public int mAllowedNetworkTypes;
+
     public boolean mAllowRoaming;
+
     public boolean mAllowMetered;
+
     public String mTitle;
+
     public String mDescription;
+
     public int mBypassRecommendedSizeLimit;
 
     public int mFuzz;
@@ -306,12 +340,15 @@ public class DownloadInfo {
     private DownloadThread mTask;
 
     private final Context mContext;
+
     private final SystemFacade mSystemFacade;
+
     private final StorageManager mStorageManager;
+
     private final DownloadNotifier mNotifier;
 
     private DownloadInfo(Context context, SystemFacade systemFacade, StorageManager storageManager,
-                         DownloadNotifier notifier) {
+            DownloadNotifier notifier) {
         mContext = context;
         mSystemFacade = systemFacade;
         mStorageManager = storageManager;

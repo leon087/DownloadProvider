@@ -54,7 +54,7 @@ public class Constants {
     /** the intent that gets sent when clicking a successful download */
     public static final String ACTION_OPEN = "android.intent.action.DOWNLOAD_OPEN";
 
-    /** the intent that gets sent when clicking an incomplete/failed download  */
+    /** the intent that gets sent when clicking an incomplete/failed download */
     public static final String ACTION_LIST = "android.intent.action.DOWNLOAD_LIST";
 
     /** the intent that gets sent when deleting the notification of a completed download */
@@ -169,9 +169,11 @@ public class Constants {
 
     /** Enable verbose logging - use with "setprop log.tag.DownloadManager VERBOSE" */
     private static final boolean LOCAL_LOGV = false;
+
     public static final boolean LOGV = LOCAL_LOGV && Log.isLoggable(TAG, Log.VERBOSE);
 
     /** Enable super-verbose logging */
     private static final boolean LOCAL_LOGVV = false;
+
     public static final boolean LOGVV = LOCAL_LOGVV && LOGV;
 }

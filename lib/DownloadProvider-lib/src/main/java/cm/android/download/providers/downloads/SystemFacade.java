@@ -21,6 +21,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.NetworkInfo;
 
 interface SystemFacade {
+
     /**
      * @see System#currentTimeMillis()
      */
@@ -28,7 +29,7 @@ interface SystemFacade {
 
     /**
      * @return Currently active network, or null if there's no active
-     *         connection.
+     * connection.
      */
     public NetworkInfo getActiveNetworkInfo(int uid);
 
@@ -47,7 +48,8 @@ interface SystemFacade {
 
     /**
      * @return recommended maximum size, in bytes, of downloads that may go over a mobile
-     * connection; or null if there's no recommended limit.  The user will have the option to bypass
+     * connection; or null if there's no recommended limit.  The user will have the option to
+     * bypass
      * this limit.
      */
     public Long getRecommendedMaxBytesOverMobile();

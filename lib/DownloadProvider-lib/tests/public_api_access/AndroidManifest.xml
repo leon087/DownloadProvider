@@ -19,7 +19,7 @@
           package="com.android.providers.downloads.public_api_access_tests">
 
     <application>
-        <uses-library android:name="android.test.runner" />
+        <uses-library android:name="android.test.runner"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET"/>

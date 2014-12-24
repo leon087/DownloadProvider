@@ -39,20 +39,29 @@ import cm.android.download.ui.R;
  * packages/apps/Browser.
  */
 public class DateSortedExpandableListAdapter implements ExpandableListAdapter {
+
     // Array for each of our bins.  Each entry represents how many items are
     // in that bin.
     private int mItemMap[];
+
     // This is our GroupCount.  We will have at most DateSorter.DAY_COUNT
     // bins, less if the user has no items in one or more bins.
     private int mNumberOfBins;
+
     private Vector<DataSetObserver> mObservers;
+
     private Cursor mCursor;
+
     private DateSorter mDateSorter;
+
     private int mDateIndex;
+
     private int mIdIndex;
+
     private Context mContext;
 
     private class ChangeObserver extends ContentObserver {
+
         public ChangeObserver() {
             super(new Handler());
         }
@@ -69,6 +78,7 @@ public class DateSortedExpandableListAdapter implements ExpandableListAdapter {
     }
 
     private class MyDataSetObserver extends DataSetObserver {
+
         @Override
         public void onChanged() {
             buildMap();
@@ -131,6 +141,7 @@ public class DateSortedExpandableListAdapter implements ExpandableListAdapter {
      * has already been moved to the correct position.  Along with
      * {@link #getInt} and {@link #getString}, these are provided so the client
      * does not need to access the Cursor directly
+     *
      * @param cursorIndex Index to query the Cursor.
      * @return corresponding byte array from the Cursor.
      */
@@ -147,6 +158,7 @@ public class DateSortedExpandableListAdapter implements ExpandableListAdapter {
      * already been moved to the correct position.  Along with
      * {@link #getBlob} and {@link #getString}, these are provided so the client
      * does not need to access the Cursor directly
+     *
      * @param cursorIndex Index to query the Cursor.
      * @return corresponding integer from the Cursor.
      */
@@ -167,6 +179,7 @@ public class DateSortedExpandableListAdapter implements ExpandableListAdapter {
      * already been moved to the correct position.  Along with
      * {@link #getInt} and {@link #getInt}, these are provided so the client
      * does not need to access the Cursor directly
+     *
      * @param cursorIndex Index to query the Cursor.
      * @return corresponding String from the Cursor.
      */
@@ -176,9 +189,12 @@ public class DateSortedExpandableListAdapter implements ExpandableListAdapter {
 
     /**
      * Determine which group an item belongs to.
+     *
      * @param childId ID of the child view in question.
      * @return int Group position of the containing group.
-    /* package */ int groupFromChildId(long childId) {
+     * /* package
+     */
+    int groupFromChildId(long childId) {
         int group = -1;
         for (mCursor.moveToFirst(); !mCursor.isAfterLast();
                 mCursor.moveToNext()) {
@@ -186,11 +202,15 @@ public class DateSortedExpandableListAdapter implements ExpandableListAdapter {
                 int bin = mDateSorter.getIndex(getLong(mDateIndex));
                 // bin is the same as the group if the number of bins is the
                 // same as DateSorter
-                if (DateSorter.DAY_COUNT == mNumberOfBins) return bin;
+                if (DateSorter.DAY_COUNT == mNumberOfBins) {
+                    return bin;
+                }
                 // There are some empty bins.  Find the corresponding group.
                 group = 0;
                 for (int i = 0; i < bin; i++) {
-                    if (mItemMap[i] != 0) group++;
+                    if (mItemMap[i] != 0) {
+                        group++;
+                    }
                 }
                 break;
             }
@@ -202,6 +222,7 @@ public class DateSortedExpandableListAdapter implements ExpandableListAdapter {
      * Translates from a group position in the ExpandableList to a bin.  This is
      * necessary because some groups have no history items, so we do not include
      * those in the ExpandableList.
+     *
      * @param groupPosition Position in the ExpandableList's set of groups
      * @return The corresponding bin that holds that group.
      */
@@ -230,6 +251,7 @@ public class DateSortedExpandableListAdapter implements ExpandableListAdapter {
 
     /**
      * Move the cursor to the position indicated.
+     *
      * @param packedPosition Position in packed position representation.
      * @return True on success, false otherwise.
      */
@@ -247,14 +269,17 @@ public class DateSortedExpandableListAdapter implements ExpandableListAdapter {
 
     /**
      * Move the cursor the the position indicated.
+     *
      * @param groupPosition Index of the group containing the desired item.
      * @param childPosition Index of the item within the specified group.
      * @return boolean False if the cursor is closed, so the Cursor was not
-     *      moved.  True on success.
+     * moved.  True on success.
      */
     /* package */ boolean moveCursorToChildPosition(int groupPosition,
             int childPosition) {
-        if (mCursor.isClosed()) return false;
+        if (mCursor.isClosed()) {
+            return false;
+        }
         groupPosition = groupPositionToBin(groupPosition);
         int index = childPosition;
         for (int i = 0; i < groupPosition; i++) {

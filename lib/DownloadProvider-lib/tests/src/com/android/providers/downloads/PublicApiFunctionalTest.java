@@ -16,6 +16,12 @@
 
 package com.android.providers.downloads;
 
+import com.google.mockwebserver.MockResponse;
+import com.google.mockwebserver.RecordedRequest;
+import com.google.mockwebserver.SocketPolicy;
+
+import com.android.providers.downloads.DownloadManager;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -29,11 +35,6 @@ import android.provider.Downloads;
 import android.test.suitebuilder.annotation.LargeTest;
 import android.test.suitebuilder.annotation.Suppress;
 import android.text.format.DateUtils;
-
-import com.android.providers.downloads.DownloadManager;
-import com.google.mockwebserver.MockResponse;
-import com.google.mockwebserver.RecordedRequest;
-import com.google.mockwebserver.SocketPolicy;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,10 +64,13 @@ import static org.mockito.Mockito.verify;
 
 @LargeTest
 public class PublicApiFunctionalTest extends AbstractPublicApiTest {
+
     private static final String REDIRECTED_PATH = "/other_path";
+
     private static final String ETAG = "my_etag";
 
     protected File mTestDirectory;
+
     private NotificationManager mNotifManager;
 
     public PublicApiFunctionalTest() {
@@ -81,7 +85,7 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
                 .getSystemService(Context.NOTIFICATION_SERVICE);
 
         mTestDirectory = new File(Environment.getExternalStorageDirectory() + File.separator
-                                  + "download_manager_functional_test");
+                + "download_manager_functional_test");
         if (mTestDirectory.exists()) {
             for (File file : mTestDirectory.listFiles()) {
                 file.delete();
@@ -107,12 +111,12 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
 
         Download download = enqueueRequest(getRequest());
         assertEquals(DownloadManager.STATUS_PENDING,
-                     download.getLongField(DownloadManager.COLUMN_STATUS));
+                download.getLongField(DownloadManager.COLUMN_STATUS));
         assertEquals(getServerUri(REQUEST_PATH),
-                     download.getStringField(DownloadManager.COLUMN_URI));
+                download.getStringField(DownloadManager.COLUMN_URI));
         assertEquals(download.mId, download.getLongField(DownloadManager.COLUMN_ID));
         assertEquals(mSystemFacade.currentTimeMillis(),
-                     download.getLongField(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP));
+                download.getLongField(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP));
 
         mSystemFacade.incrementTimeMillis(10);
         download.runUntilStatus(DownloadManager.STATUS_SUCCESSFUL);
@@ -129,7 +133,7 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
         assertEquals(size, download.getLongField(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
         assertEquals(size, download.getLongField(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
         assertEquals(mSystemFacade.currentTimeMillis(),
-                     download.getLongField(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP));
+                download.getLongField(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP));
 
         checkCompleteDownload(download);
     }
@@ -163,11 +167,11 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
 
     public void testTitleAndDescription() throws Exception {
         Download download = enqueueRequest(getRequest()
-                                           .setTitle("my title")
-                                           .setDescription("my description"));
+                .setTitle("my title")
+                .setDescription("my description"));
         assertEquals("my title", download.getStringField(DownloadManager.COLUMN_TITLE));
         assertEquals("my description",
-                     download.getStringField(DownloadManager.COLUMN_DESCRIPTION));
+                download.getStringField(DownloadManager.COLUMN_DESCRIPTION));
     }
 
     public void testDownloadError() throws Exception {
@@ -187,9 +191,9 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
         Download download = enqueueRequest(getRequest());
         download.runUntilStatus(DownloadManager.STATUS_PAUSED);
         assertEquals(initialLength,
-                     download.getLongField(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                download.getLongField(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
         assertEquals(FILE_CONTENT.length(),
-                     download.getLongField(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                download.getLongField(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
         takeRequest(); // get the first request out of the queue
 
         mSystemFacade.incrementTimeMillis(RETRY_DELAY_MILLIS);
@@ -198,7 +202,7 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
 
         List<String> headers = takeRequest().getHeaders();
         assertTrue("No Range header: " + headers,
-                   headers.contains("Range: bytes=" + initialLength + "-"));
+                headers.contains("Range: bytes=" + initialLength + "-"));
         assertTrue("No ETag header: " + headers, headers.contains("If-Match: " + ETAG));
     }
 
@@ -239,9 +243,9 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
         int numPackets = 100;
         int contentLength = STRING_1K.length() * numPackets;
         return buildResponse(HTTP_OK, STRING_1K)
-               .setHeader("Content-length", contentLength)
-               .setHeader("Etag", ETAG)
-               .setBytesPerSecond(1024);
+                .setHeader("Content-length", contentLength)
+                .setHeader("Etag", ETAG)
+                .setBytesPerSecond(1024);
     }
 
     public void testFiltering() throws Exception {
@@ -265,23 +269,24 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
         checkAndCloseCursor(cursor, download2);
 
         cursor = mManager.query(new DownloadManager.Query()
-                                .setFilterByStatus(DownloadManager.STATUS_PENDING));
+                .setFilterByStatus(DownloadManager.STATUS_PENDING));
         checkAndCloseCursor(cursor, download3);
 
         cursor = mManager.query(new DownloadManager.Query()
-                                .setFilterByStatus(DownloadManager.STATUS_FAILED
-                                              | DownloadManager.STATUS_SUCCESSFUL));
+                .setFilterByStatus(DownloadManager.STATUS_FAILED
+                        | DownloadManager.STATUS_SUCCESSFUL));
         checkAndCloseCursor(cursor, download2, download1);
 
         cursor = mManager.query(new DownloadManager.Query()
-                                .setFilterByStatus(DownloadManager.STATUS_RUNNING));
+                .setFilterByStatus(DownloadManager.STATUS_RUNNING));
         checkAndCloseCursor(cursor);
 
         mSystemFacade.incrementTimeMillis(1);
         Download invisibleDownload = enqueueRequest(getRequest().setVisibleInDownloadsUi(false));
         cursor = mManager.query(new DownloadManager.Query());
         checkAndCloseCursor(cursor, invisibleDownload, download3, download2, download1);
-        cursor = mManager.query(new DownloadManager.Query().setOnlyIncludeVisibleInDownloadsUi(true));
+        cursor = mManager
+                .query(new DownloadManager.Query().setOnlyIncludeVisibleInDownloadsUi(true));
         checkAndCloseCursor(cursor, download3, download2, download1);
     }
 
@@ -369,7 +374,7 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
     public void testRequestHeaders() throws Exception {
         enqueueResponse(buildEmptyResponse(HTTP_OK));
         Download download = enqueueRequest(getRequest().addRequestHeader("Header1", "value1")
-                                           .addRequestHeader("Header2", "value2"));
+                .addRequestHeader("Header2", "value2"));
         download.runUntilStatus(DownloadManager.STATUS_SUCCESSFUL);
 
         List<String> headers = takeRequest().getHeaders();
@@ -544,7 +549,7 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
         Intent intent = new Intent(Constants.ACTION_LIST);
         intent.setData(Uri.parse(Downloads.Impl.CONTENT_URI + "/" + download.mId));
         intent.putExtra(DownloadManager.EXTRA_NOTIFICATION_CLICK_DOWNLOAD_IDS,
-                new long[] { download.mId });
+                new long[]{download.mId});
         receiver.onReceive(mContext, intent);
 
         assertEquals(1, mSystemFacade.mBroadcastsSent.size());
@@ -578,7 +583,7 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
 
         // restrict a download to wifi...
         download = enqueueRequest(getRequest()
-                                  .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI));
+                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI));
         download.runUntilStatus(DownloadManager.STATUS_PAUSED);
         // ...then enable wifi
         mSystemFacade.mActiveNetworkType = ConnectivityManager.TYPE_WIFI;
@@ -715,7 +720,7 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
 
     private void checkCompleteDownload(Download download) throws Exception {
         assertEquals(FILE_CONTENT.length(),
-                     download.getLongField(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                download.getLongField(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
         assertEquals(FILE_CONTENT, download.getContents());
     }
 
@@ -723,7 +728,7 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
         Download download = enqueueRequest(getRequest());
         download.runUntilStatus(DownloadManager.STATUS_FAILED);
         assertEquals(expectedErrorCode,
-                     download.getLongField(DownloadManager.COLUMN_REASON));
+                download.getLongField(DownloadManager.COLUMN_REASON));
     }
 
     /**
@@ -731,6 +736,7 @@ public class PublicApiFunctionalTest extends AbstractPublicApiTest {
      * 1) Request to REQUEST_PATH with 3xx response redirecting to another URI
      * 2) Request to REDIRECTED_PATH with interrupted partial response
      * 3) Resume request to complete download
+     *
      * @return the last request sent to the server, resuming after the interruption
      */
     private RecordedRequest runRedirectionTest(int status) throws Exception {

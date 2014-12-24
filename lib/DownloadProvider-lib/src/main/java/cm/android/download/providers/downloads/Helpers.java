@@ -36,6 +36,7 @@ import cm.android.download.provider.Downloads;
  * Some helper functions for the download manager
  */
 public class Helpers {
+
     public static Random sRandom = new Random(SystemClock.uptimeMillis());
 
     /** Regex used to parse content-disposition headers */
@@ -60,7 +61,7 @@ public class Helpers {
                 return m.group(1);
             }
         } catch (IllegalStateException ex) {
-             // This function is defined as returning null when it can't parse the header
+            // This function is defined as returning null when it can't parse the header
         }
         return null;
     }
@@ -89,7 +90,7 @@ public class Helpers {
             base = storageManager.locateDestinationDirectory(mimeType, destination,
                     contentLength);
             path = chooseFilename(url, hint, contentDisposition, contentLocation,
-                                             destination);
+                    destination);
         }
         storageManager.verifySpace(destination, path, contentLength);
 //        if (DownloadDrmHelper.isDrmConvertNeeded(mimeType)) {
@@ -376,7 +377,7 @@ public class Helpers {
     // expression <- ( expression ) | statement [AND_OR ( expression ) | statement] *
     //             | statement [AND_OR expression]*
     private static void parseExpression(Lexer lexer) {
-        for (;;) {
+        for (; ; ) {
             // ( expression )
             if (lexer.currentToken() == Lexer.TOKEN_OPEN_PAREN) {
                 lexer.advance();
@@ -433,21 +434,35 @@ public class Helpers {
      * A simple lexer that recognizes the words of our restricted subset of SQL where clauses
      */
     private static class Lexer {
+
         public static final int TOKEN_START = 0;
+
         public static final int TOKEN_OPEN_PAREN = 1;
+
         public static final int TOKEN_CLOSE_PAREN = 2;
+
         public static final int TOKEN_AND_OR = 3;
+
         public static final int TOKEN_COLUMN = 4;
+
         public static final int TOKEN_COMPARE = 5;
+
         public static final int TOKEN_VALUE = 6;
+
         public static final int TOKEN_IS = 7;
+
         public static final int TOKEN_NULL = 8;
+
         public static final int TOKEN_END = 9;
 
         private final String mSelection;
+
         private final Set<String> mAllowedColumns;
+
         private int mOffset = 0;
+
         private int mCurrentToken = TOKEN_START;
+
         private final char[] mChars;
 
         public Lexer(String selection, Set<String> allowedColumns) {
@@ -613,6 +628,7 @@ public class Helpers {
     /**
      * Replace invalid filename characters according to
      * specifications of the VFAT.
+     *
      * @note Package-private due to testing.
      */
     private static String replaceInvalidVfatCharacters(String filename) {
@@ -636,17 +652,17 @@ public class Helpers {
         for (int i = 0; i < filename.length(); i++) {
             ch = filename.charAt(i);
             if ((START_CTRLCODE <= ch &&
-                ch <= END_CTRLCODE) ||
-                ch == QUOTEDBL ||
-                ch == ASTERISK ||
-                ch == SLASH ||
-                ch == COLON ||
-                ch == LESS ||
-                ch == GREATER ||
-                ch == QUESTION ||
-                ch == BACKSLASH ||
-                ch == BAR ||
-                ch == DEL){
+                    ch <= END_CTRLCODE) ||
+                    ch == QUOTEDBL ||
+                    ch == ASTERISK ||
+                    ch == SLASH ||
+                    ch == COLON ||
+                    ch == LESS ||
+                    ch == GREATER ||
+                    ch == QUESTION ||
+                    ch == BACKSLASH ||
+                    ch == BAR ||
+                    ch == DEL) {
                 if (!isRepetition) {
                     sb.append(UNDERSCORE);
                     isRepetition = true;

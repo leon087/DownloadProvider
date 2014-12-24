@@ -16,6 +16,8 @@
 
 package cm.android.download.providers.downloads;
 
+import com.google.common.collect.Maps;
+
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -25,8 +27,6 @@ import android.media.MediaScannerConnection.MediaScannerConnectionClient;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.util.Log;
-
-import com.google.common.collect.Maps;
 
 import java.util.HashMap;
 
@@ -42,15 +42,21 @@ import static cm.android.download.providers.downloads.Constants.TAG;
  * Manages asynchronous scanning of completed downloads.
  */
 public class DownloadScanner implements MediaScannerConnectionClient {
+
     private static final long SCAN_TIMEOUT = MINUTE_IN_MILLIS;
 
     private final Context mContext;
+
     private final MediaScannerConnection mConnection;
 
     private static class ScanRequest {
+
         public final long id;
+
         public final String path;
+
         public final String mimeType;
+
         public final long requestRealtime;
 
         public ScanRequest(long id, String path, String mimeType) {
@@ -101,7 +107,9 @@ public class DownloadScanner implements MediaScannerConnectionClient {
      * @see #hasPendingScans()
      */
     public void requestScan(DownloadInfo info) {
-        if (LOGV) Log.v(TAG, "requestScan() for " + info.mFileName);
+        if (LOGV) {
+            Log.v(TAG, "requestScan() for " + info.mFileName);
+        }
         synchronized (mConnection) {
             final ScanRequest req = new ScanRequest(info.mId, info.mFileName, info.mMimeType);
             mPending.put(req.path, req);

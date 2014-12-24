@@ -23,6 +23,7 @@ import java.util.Arrays;
  * Provides fake data for large transfers.
  */
 public class FakeInputStream extends InputStream {
+
     private long mRemaining;
 
     public FakeInputStream(long length) {

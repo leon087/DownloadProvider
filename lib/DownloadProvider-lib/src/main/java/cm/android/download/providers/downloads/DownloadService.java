@@ -16,6 +16,11 @@
 
 package cm.android.download.providers.downloads;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -33,11 +38,6 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-
 import java.io.File;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
@@ -53,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.concurrent.GuardedBy;
 
+import cm.android.download.DownloadConfig;
 import cm.android.download.internal.util.IndentingPrintWriter;
 import cm.android.download.provider.Downloads;
 
@@ -78,6 +79,7 @@ public class DownloadService extends Service {
     SystemFacade mSystemFacade;
 
     private AlarmManager mAlarmManager;
+
     private StorageManager mStorageManager;
 
     /**
@@ -102,7 +104,7 @@ public class DownloadService extends Service {
     private final ExecutorService mExecutor = buildDownloadExecutor();
 
     private static ExecutorService buildDownloadExecutor() {
-        final int maxConcurrent = 5; // FIXME transfermanager
+        final int maxConcurrent = DownloadConfig.MAX_CON_CURRENT_DOWNLOADS_ALLOWED;
 //        final int maxConcurrent = Resources.getSystem().getInteger(
 //                com.android.internal.R.integer.config_MaxConcurrentDownloadsAllowed);
 
@@ -118,6 +120,7 @@ public class DownloadService extends Service {
     private DownloadScanner mScanner;
 
     private HandlerThread mUpdateThread;
+
     private Handler mUpdateHandler;
 
     private volatile int mLastStartId;
@@ -126,6 +129,7 @@ public class DownloadService extends Service {
      * Receives notifications when the data in the content provider changes
      */
     private class DownloadManagerContentObserver extends ContentObserver {
+
         public DownloadManagerContentObserver() {
             super(new Handler());
         }
@@ -139,8 +143,6 @@ public class DownloadService extends Service {
     /**
      * Returns an IBinder instance when someone wants to connect to this
      * service. Binding to this service is not allowed.
-     *
-     * @throws UnsupportedOperationException
      */
     @Override
     public IBinder onBind(Intent i) {
@@ -220,6 +222,7 @@ public class DownloadService extends Service {
     }
 
     private static final int MSG_UPDATE = 1;
+
     private static final int MSG_FINAL_UPDATE = 2;
 
     private Handler.Callback mUpdateCallback = new Handler.Callback() {
@@ -228,7 +231,9 @@ public class DownloadService extends Service {
             Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
 
             final int startId = msg.arg1;
-            if (DEBUG_LIFECYCLE) Log.v(TAG, "Updating for startId " + startId);
+            if (DEBUG_LIFECYCLE) {
+                Log.v(TAG, "Updating for startId " + startId);
+            }
 
             // Since database is current source of truth, our "active" status
             // depends on database state. We always get one final update pass
@@ -272,7 +277,9 @@ public class DownloadService extends Service {
                 // will always be delivered with a new startId.
 
                 if (stopSelfResult(startId)) {
-                    if (DEBUG_LIFECYCLE) Log.v(TAG, "Nothing left; stopped");
+                    if (DEBUG_LIFECYCLE) {
+                        Log.v(TAG, "Nothing left; stopped");
+                    }
                     getContentResolver().unregisterContentObserver(mObserver);
                     mScanner.shutdown();
                     mUpdateThread.quit();

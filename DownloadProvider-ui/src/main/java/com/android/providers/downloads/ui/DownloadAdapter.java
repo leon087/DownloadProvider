@@ -38,20 +38,33 @@ import cm.android.download.ui.R;
  * List adapter for Cursors returned by {@link DownloadManager}.
  */
 public class DownloadAdapter extends CursorAdapter {
+
     private final DownloadList mDownloadList;
+
     private Cursor mCursor;
+
     private Resources mResources;
+
     private DateFormat mDateFormat;
+
     private DateFormat mTimeFormat;
 
     private final int mTitleColumnId;
+
     private final int mDescriptionColumnId;
+
     private final int mStatusColumnId;
+
     private final int mReasonColumnId;
+
     private final int mTotalBytesColumnId;
+
     private final int mMediaTypeColumnId;
+
     private final int mDateColumnId;
+
     private final int mIdColumnId;
+
     private final int mFileNameColumnId;
 
     public DownloadAdapter(DownloadList downloadList, Cursor cursor) {

@@ -16,6 +16,11 @@
 
 package com.android.providers.downloads;
 
+import com.google.mockwebserver.MockResponse;
+import com.google.mockwebserver.MockWebServer;
+import com.google.mockwebserver.RecordedRequest;
+import com.google.mockwebserver.SocketPolicy;
+
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.ContentResolver;
@@ -31,11 +36,6 @@ import android.test.ServiceTestCase;
 import android.test.mock.MockContentResolver;
 import android.util.Log;
 
-import com.google.mockwebserver.MockResponse;
-import com.google.mockwebserver.MockWebServer;
-import com.google.mockwebserver.RecordedRequest;
-import com.google.mockwebserver.SocketPolicy;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +50,9 @@ public abstract class AbstractDownloadProviderFunctionalTest extends
         ServiceTestCase<DownloadService> {
 
     protected static final String LOG_TAG = "DownloadProviderFunctionalTest";
+
     private static final String PROVIDER_AUTHORITY = "downloads";
+
     protected static final long RETRY_DELAY_MILLIS = 61 * 1000;
 
     protected static final String
@@ -59,10 +61,15 @@ public abstract class AbstractDownloadProviderFunctionalTest extends
     private final MockitoHelper mMockitoHelper = new MockitoHelper();
 
     protected MockWebServer mServer;
+
     protected MockContentResolverWithNotify mResolver;
+
     protected TestContext mTestContext;
+
     protected FakeSystemFacade mSystemFacade;
+
     protected static String STRING_1K;
+
     static {
         StringBuilder buff = new StringBuilder();
         for (int i = 0; i < 1024; i++) {
@@ -72,6 +79,7 @@ public abstract class AbstractDownloadProviderFunctionalTest extends
     }
 
     static class MockContentResolverWithNotify extends MockContentResolver {
+
         public boolean mNotifyWasCalled = false;
 
         public synchronized void resetNotified() {
@@ -88,13 +96,16 @@ public abstract class AbstractDownloadProviderFunctionalTest extends
 
     /**
      * Context passed to the provider and the service.  Allows most methods to pass through to the
-     * real Context (this is a LargeTest), with a few exceptions, including renaming file operations
+     * real Context (this is a LargeTest), with a few exceptions, including renaming file
+     * operations
      * to avoid file and DB conflicts (via RenamingDelegatingContext).
      */
     static class TestContext extends RenamingDelegatingContext {
+
         private static final String FILENAME_PREFIX = "test.";
 
         private ContentResolver mResolver;
+
         private final NotificationManager mNotifManager;
 
         boolean mHasServiceBeenStarted = false;
@@ -201,12 +212,14 @@ public abstract class AbstractDownloadProviderFunctionalTest extends
         if (mResolver == null) {
             return;
         }
-        String[] columns = new String[] {Downloads.Impl._DATA};
+        String[] columns = new String[]{Downloads.Impl._DATA};
         Cursor cursor = mResolver.query(Downloads.Impl.CONTENT_URI, columns, null, null, null);
         try {
             for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
                 String filePath = cursor.getString(0);
-                if (filePath == null) continue;
+                if (filePath == null) {
+                    continue;
+                }
                 Log.d(LOG_TAG, "Deleting " + filePath);
                 new File(filePath).delete();
             }

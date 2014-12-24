@@ -28,13 +28,17 @@ import java.io.Writer;
  * modification after newline.
  */
 public class IndentingPrintWriter extends PrintWriter {
+
     private final String mSingleIndent;
+
     private final int mWrapLength;
 
     /** Mutable version of current indent */
     private StringBuilder mIndentBuilder = new StringBuilder();
+
     /** Cache of current {@link #mIndentBuilder} value */
     private char[] mCurrentIndent;
+
     /** Length of current line being built, excluding any indent */
     private int mCurrentLength;
 

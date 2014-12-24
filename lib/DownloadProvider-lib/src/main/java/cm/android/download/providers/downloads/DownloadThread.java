@@ -76,20 +76,25 @@ public class DownloadThread implements Runnable {
     // checking races once we have ConnectivityManager API
 
     private static final int HTTP_REQUESTED_RANGE_NOT_SATISFIABLE = 416;
+
     private static final int HTTP_TEMP_REDIRECT = 307;
 
     private static final int DEFAULT_TIMEOUT = (int) (20 * SECOND_IN_MILLIS);
 
     private final Context mContext;
+
     private final DownloadInfo mInfo;
+
     private final SystemFacade mSystemFacade;
+
     private final StorageManager mStorageManager;
+
     private final DownloadNotifier mNotifier;
 
     private volatile boolean mPolicyDirty;
 
     public DownloadThread(Context context, SystemFacade systemFacade, DownloadInfo info,
-                          StorageManager storageManager, DownloadNotifier notifier) {
+            StorageManager storageManager, DownloadNotifier notifier) {
         mContext = context;
         mSystemFacade = systemFacade;
         mInfo = info;
@@ -112,37 +117,54 @@ public class DownloadThread implements Runnable {
      * State for the entire run() method.
      */
     static class State {
+
         public String mFilename;
+
         public String mMimeType;
+
         public int mRetryAfter = 0;
+
         public boolean mGotData = false;
+
         public String mRequestUri;
+
         public long mTotalBytes = -1;
+
         public long mCurrentBytes = 0;
+
         public String mHeaderETag;
+
         public boolean mContinuingDownload = false;
+
         public long mBytesNotified = 0;
+
         public long mTimeLastNotification = 0;
+
         public int mNetworkType = 0;//ConnectivityManager.TYPE_NONE; // TODO
 
         /**
          * Historical bytes/second speed of this download.
          */
         public long mSpeed;
+
         /**
          * Time when current sample started.
          */
         public long mSpeedSampleStart;
+
         /**
          * Bytes transferred since current sample started.
          */
         public long mSpeedSampleBytes;
 
         public long mContentLength = -1;
+
         public String mContentDisposition;
+
         public String mContentLocation;
 
         public int mRedirectionCount;
+
         public URL mUrl;
 
         public State(DownloadInfo info) {
@@ -368,7 +390,9 @@ public class DownloadThread implements Runnable {
                 throw new StopRequestException(STATUS_HTTP_DATA_ERROR, e);
 
             } finally {
-                if (conn != null) conn.disconnect();
+                if (conn != null) {
+                    conn.disconnect();
+                }
             }
         }
 
@@ -425,8 +449,12 @@ public class DownloadThread implements Runnable {
 //            IoUtils.closeQuietly(in);
 
             try {
-                if (out != null) out.flush();
-                if (outFd != null) outFd.sync();
+                if (out != null) {
+                    out.flush();
+                }
+                if (outFd != null) {
+                    outFd.sync();
+                }
             } catch (IOException e) {
             } finally {
 //                IoUtils.closeQuietly(out); // TODO
@@ -495,7 +523,8 @@ public class DownloadThread implements Runnable {
     }
 
     /**
-     * Called just before the thread finishes, regardless of status, to take any necessary action on
+     * Called just before the thread finishes, regardless of status, to take any necessary action
+     * on
      * the downloaded file.
      */
     private void cleanupDestination(State state, int finalStatus) {
@@ -751,7 +780,8 @@ public class DownloadThread implements Runnable {
      * appropriately for resumption.
      */
     private void setupDestinationFile(State state) throws StopRequestException {
-        if (!TextUtils.isEmpty(state.mFilename)) { // only true if we've already run a thread for this download
+        if (!TextUtils.isEmpty(
+                state.mFilename)) { // only true if we've already run a thread for this download
             if (Constants.LOGV) {
                 Log.i(Constants.TAG, "have run thread before for id: " + mInfo.mId +
                         ", and state.mFilename: " + state.mFilename);

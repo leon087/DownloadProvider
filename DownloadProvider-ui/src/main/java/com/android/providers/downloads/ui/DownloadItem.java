@@ -28,19 +28,27 @@ import cm.android.download.ui.R;
 
 /**
  * This class customizes RelativeLayout to directly handle clicks on the left part of the view and
- * treat them at clicks on the checkbox. This makes rapid selection of many items easier. This class
+ * treat them at clicks on the checkbox. This makes rapid selection of many items easier. This
+ * class
  * also keeps an ID associated with the currently displayed download and notifies a listener upon
  * selection changes with that ID.
  */
 public class DownloadItem extends GridLayout implements Checkable {
+
     private static float CHECKMARK_AREA = -1;
 
     private boolean mIsInDownEvent = false;
+
     private CheckBox mCheckBox;
+
     private long mDownloadId;
+
     private String mFileName;
+
     private String mMimeType;
+
     private DownloadList mDownloadList;
+
     private int mPosition;
 
     public DownloadItem(Context context, AttributeSet attrs, int defStyle) {
@@ -85,8 +93,8 @@ public class DownloadItem extends GridLayout implements Checkable {
     }
 
     private boolean inCheckArea(MotionEvent event) {
-    	// FIXME transfermanager
-    	return event.getX() < CHECKMARK_AREA;
+        // FIXME transfermanager
+        return event.getX() < CHECKMARK_AREA;
 //        if (isLayoutRtl()) {
 //            return event.getX() > getWidth() - CHECKMARK_AREA;
 //        } else {
@@ -97,7 +105,7 @@ public class DownloadItem extends GridLayout implements Checkable {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         boolean handled = false;
-        switch(event.getAction()) {
+        switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (inCheckArea(event)) {
                     mIsInDownEvent = true;

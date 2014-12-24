@@ -20,6 +20,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import cm.android.download.DownloadConfig;
 import cm.android.download.DownloadManager;
 
 //import android.net.NetworkPolicyManager;
@@ -30,10 +31,11 @@ import cm.android.download.DownloadManager;
  * @pending
  */
 public final class Downloads {
+
     /**
      * DownloadProvider authority
      */
-    public static final String AUTHORITY = "cm.android.downloads";
+    public static final String AUTHORITY = DownloadConfig.AUTHORITY;
 
     private Downloads() {
     }
@@ -48,46 +50,54 @@ public final class Downloads {
      * @hide
      */
     public static final class Impl implements BaseColumns {
+
         private Impl() {
         }
 
         /**
          * The permission to access the download manager
          */
-        public static final String PERMISSION_ACCESS = "cm.android.permission.ACCESS_DOWNLOAD_MANAGER";
+        public static final String PERMISSION_ACCESS
+                = "cm.android.permission.ACCESS_DOWNLOAD_MANAGER";
 
         /**
          * The permission to access the download manager's advanced functions
          */
-        public static final String PERMISSION_ACCESS_ADVANCED = "cm.android.permission.ACCESS_DOWNLOAD_MANAGER_ADVANCED";
+        public static final String PERMISSION_ACCESS_ADVANCED
+                = "cm.android.permission.ACCESS_DOWNLOAD_MANAGER_ADVANCED";
 
         /**
          * The permission to access the all the downloads in the manager.
          */
-        public static final String PERMISSION_ACCESS_ALL = "cm.android.permission.ACCESS_ALL_DOWNLOADS";
+        public static final String PERMISSION_ACCESS_ALL
+                = "cm.android.permission.ACCESS_ALL_DOWNLOADS";
 
         /**
          * The permission to directly access the download manager's cache
          * directory
          */
-        public static final String PERMISSION_CACHE = "cm.android.permission.ACCESS_CACHE_FILESYSTEM";
+        public static final String PERMISSION_CACHE
+                = "cm.android.permission.ACCESS_CACHE_FILESYSTEM";
 
         /**
          * The permission to send broadcasts on download completion
          */
-        public static final String PERMISSION_SEND_INTENTS = "cm.android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS";
+        public static final String PERMISSION_SEND_INTENTS
+                = "cm.android.permission.SEND_DOWNLOAD_COMPLETED_INTENTS";
 
         /**
          * The permission to download files to the cache partition that won't be
          * automatically purged when space is needed.
          */
-        public static final String PERMISSION_CACHE_NON_PURGEABLE = "cm.android.permission.DOWNLOAD_CACHE_NON_PURGEABLE";
+        public static final String PERMISSION_CACHE_NON_PURGEABLE
+                = "cm.android.permission.DOWNLOAD_CACHE_NON_PURGEABLE";
 
         /**
          * The permission to download files without any system notification
          * being shown.
          */
-        public static final String PERMISSION_NO_NOTIFICATION = "cm.android.permission.DOWNLOAD_WITHOUT_NOTIFICATION";
+        public static final String PERMISSION_NO_NOTIFICATION
+                = "cm.android.permission.DOWNLOAD_WITHOUT_NOTIFICATION";
 
         /**
          * The content:// URI to access downloads owned by the caller's UID.
@@ -124,7 +134,8 @@ public final class Downloads {
          * that had initiated a download when that download completes. The
          * download's content: uri is specified in the intent's data.
          */
-        public static final String ACTION_DOWNLOAD_COMPLETED = "android.intent.action.DOWNLOAD_COMPLETED";
+        public static final String ACTION_DOWNLOAD_COMPLETED
+                = "android.intent.action.DOWNLOAD_COMPLETED";
 
         /**
          * Broadcast Action: this is sent by the download manager to the app
@@ -135,7 +146,8 @@ public final class Downloads {
          * associated with multiple downloads. Note: this is not currently sent
          * for downloads that have completed successfully.
          */
-        public static final String ACTION_NOTIFICATION_CLICKED = "android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED";
+        public static final String ACTION_NOTIFICATION_CLICKED
+                = "android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED";
 
         /**
          * The name of the column containing the URI of the data being
@@ -493,7 +505,8 @@ public final class Downloads {
          * Type: BOOLEAN
          * </P>
          */
-        public static final String COLUMN_BYPASS_RECOMMENDED_SIZE_LIMIT = "bypass_recommended_size_limit";
+        public static final String COLUMN_BYPASS_RECOMMENDED_SIZE_LIMIT
+                = "bypass_recommended_size_limit";
 
         /**
          * Set to true if this download is deleted. It is completely removed
@@ -696,7 +709,8 @@ public final class Downloads {
          */
         public static boolean isNotificationToBeDisplayed(int visibility) {
             return visibility == DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED
-                    || visibility == DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION;
+                    || visibility
+                    == DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION;
         }
 
         /**
@@ -936,7 +950,8 @@ public final class Downloads {
          * This download is visible and shows in the notifications while in
          * progress and after completion.
          */
-        public static final int VISIBILITY_VISIBLE_NOTIFY_COMPLETED = DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
+        public static final int VISIBILITY_VISIBLE_NOTIFY_COMPLETED
+                = DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
 
         /**
          * This download doesn't show in the UI or in the notifications.
@@ -948,9 +963,13 @@ public final class Downloads {
          * download.
          */
         public static class RequestHeaders {
+
             public static final String HEADERS_DB_TABLE = "request_headers";
+
             public static final String COLUMN_DOWNLOAD_ID = "download_id";
+
             public static final String COLUMN_HEADER = "header";
+
             public static final String COLUMN_VALUE = "value";
 
             /**
@@ -976,7 +995,7 @@ public final class Downloads {
      * Delete all the downloads for a package/class pair.
      */
     public static final void removeAllDownloadsByPackage(Context context,
-                                                         String notification_package, String notification_class) {
+            String notification_package, String notification_class) {
         context.getContentResolver().delete(Impl.CONTENT_URI,
                 QUERY_WHERE_CLAUSE,
                 new String[]{notification_package, notification_class});

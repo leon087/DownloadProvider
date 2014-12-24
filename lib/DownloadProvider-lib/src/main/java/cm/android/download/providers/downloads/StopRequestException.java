@@ -26,6 +26,7 @@ import static cm.android.download.provider.Downloads.Impl.STATUS_UNHANDLED_REDIR
  * URI, headers, or destination filename.
  */
 class StopRequestException extends Exception {
+
     private final int mFinalStatus;
 
     public StopRequestException(int finalStatus, String message) {

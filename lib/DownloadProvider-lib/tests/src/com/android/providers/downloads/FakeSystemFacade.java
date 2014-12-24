@@ -8,14 +8,23 @@ import android.net.NetworkInfo.DetailedState;
 
 import java.util.ArrayList;
 import java.util.List;
+
 public class FakeSystemFacade implements SystemFacade {
+
     long mTimeMillis = 0;
+
     Integer mActiveNetworkType = ConnectivityManager.TYPE_WIFI;
+
     boolean mIsRoaming = false;
+
     boolean mIsMetered = false;
+
     Long mMaxBytesOverMobile = null;
+
     Long mRecommendedMaxBytesOverMobile = null;
+
     List<Intent> mBroadcastsSent = new ArrayList<Intent>();
+
     private boolean mReturnActualTime = false;
 
     public void setUp() {
@@ -64,12 +73,12 @@ public class FakeSystemFacade implements SystemFacade {
 
     @Override
     public Long getMaxBytesOverMobile() {
-        return mMaxBytesOverMobile ;
+        return mMaxBytesOverMobile;
     }
 
     @Override
     public Long getRecommendedMaxBytesOverMobile() {
-        return mRecommendedMaxBytesOverMobile ;
+        return mRecommendedMaxBytesOverMobile;
     }
 
     @Override

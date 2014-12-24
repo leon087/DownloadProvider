@@ -22,9 +22,11 @@ import android.util.Log;
  * Helper for Mockito-based test cases.
  */
 public final class MockitoHelper {
+
     private static final String TAG = "MockitoHelper";
 
     private ClassLoader mOriginalClassLoader;
+
     private Thread mContextThread;
 
     /**

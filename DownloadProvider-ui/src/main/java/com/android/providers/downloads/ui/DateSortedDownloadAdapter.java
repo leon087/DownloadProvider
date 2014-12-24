@@ -30,7 +30,9 @@ import cm.android.download.DownloadManager;
  * {@link DownloadAdapter}.
  */
 public class DateSortedDownloadAdapter extends DateSortedExpandableListAdapter {
+
     private final DownloadAdapter mDelegate;
+
     private final DownloadList mDownloadList;
 
     public DateSortedDownloadAdapter(DownloadList downloadList, Cursor cursor) {
@@ -42,7 +44,7 @@ public class DateSortedDownloadAdapter extends DateSortedExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition,
-                boolean isLastChild, View convertView, ViewGroup parent) {
+            boolean isLastChild, View convertView, ViewGroup parent) {
         // The layout file uses a RelativeLayout, whereas the GroupViews use TextView.
         if (null == convertView || !(convertView instanceof RelativeLayout)) {
             convertView = mDelegate.newView();

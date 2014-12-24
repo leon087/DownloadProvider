@@ -16,13 +16,13 @@
 
 package com.android.providers.downloads;
 
+import com.android.providers.downloads.DownloadManager;
+
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.os.SystemClock;
 import android.util.Log;
-
-import com.android.providers.downloads.DownloadManager;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -40,6 +40,7 @@ import static com.android.providers.downloads.DownloadManager.STATUS_SUCCESSFUL;
 public abstract class AbstractPublicApiTest extends AbstractDownloadProviderFunctionalTest {
 
     class Download {
+
         final long mId;
 
         private Download(long downloadId) {
@@ -95,7 +96,7 @@ public abstract class AbstractPublicApiTest extends AbstractDownloadProviderFunc
         String getContents() throws Exception {
             ParcelFileDescriptor downloadedFile = mManager.openDownloadedFile(mId);
             assertTrue("Invalid file descriptor: " + downloadedFile,
-                       downloadedFile.getFileDescriptor().valid());
+                    downloadedFile.getFileDescriptor().valid());
             final InputStream stream = new ParcelFileDescriptor.AutoCloseInputStream(
                     downloadedFile);
             try {
@@ -155,6 +156,7 @@ public abstract class AbstractPublicApiTest extends AbstractDownloadProviderFunc
 
         // max time to wait before giving up on the current download operation.
         private static final int MAX_TIME_TO_WAIT_FOR_OPERATION = 5;
+
         // while waiting for the above time period, sleep this long to yield to the
         // download thread
         private static final int TIME_TO_SLEEP = 1000;
@@ -200,6 +202,7 @@ public abstract class AbstractPublicApiTest extends AbstractDownloadProviderFunc
     }
 
     protected static final String PACKAGE_NAME = "my.package.name";
+
     protected static final String REQUEST_PATH = "/path";
 
     protected DownloadManager mManager;

@@ -36,7 +36,7 @@
                             android:clipToPadding="false"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:scrollbarStyle="outsideOverlay" />
+                            android:scrollbarStyle="outsideOverlay"/>
         <ListView android:id="@+id/size_ordered_list"
                   android:paddingStart="16dip"
                   android:paddingEnd="16dip"
@@ -44,7 +44,7 @@
                   android:clipToPadding="false"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                  android:scrollbarStyle="outsideOverlay" />
+                  android:scrollbarStyle="outsideOverlay"/>
         <TextView xmlns:android="http://schemas.android.com/apk/res/android"
                   android:id="@+id/empty"
                   android:layout_width="match_parent"
@@ -62,10 +62,10 @@
                   android:layout_gravity="center"
                   style="?android:attr/buttonBarStyle">
 
-          <Button android:id="@+id/sort_button"
-                  style="?android:attr/buttonBarButtonStyle"
-                  android:layout_width="0dip"
-                  android:layout_weight="1"
-                  android:layout_height="match_parent"/>
-     </LinearLayout>
+        <Button android:id="@+id/sort_button"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="0dip"
+                android:layout_weight="1"
+                android:layout_height="match_parent"/>
+    </LinearLayout>
 </LinearLayout>

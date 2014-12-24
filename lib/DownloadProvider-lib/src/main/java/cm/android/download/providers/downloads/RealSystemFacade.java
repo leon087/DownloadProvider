@@ -28,6 +28,7 @@ import cm.android.download.DownloadManager;
 import cm.android.download.provider.Downloads;
 
 class RealSystemFacade implements SystemFacade {
+
     private Context mContext;
 
     public RealSystemFacade(Context context) {
@@ -48,7 +49,8 @@ class RealSystemFacade implements SystemFacade {
             return null;
         }
 
-        final NetworkInfo activeInfo = connectivity.getActiveNetworkInfo(); // FIXME transfermanager:used to be getActiveNetworkInfoForUid(uid);
+        final NetworkInfo activeInfo = connectivity
+                .getActiveNetworkInfo(); // FIXME transfermanager:used to be getActiveNetworkInfoForUid(uid);
         if (activeInfo == null && Constants.LOGVV) {
             Log.v(Constants.TAG, "network is not available");
         }

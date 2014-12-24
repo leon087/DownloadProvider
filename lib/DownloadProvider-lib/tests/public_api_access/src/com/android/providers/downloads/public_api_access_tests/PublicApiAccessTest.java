@@ -16,14 +16,14 @@
 
 package com.android.providers.downloads.public_api_access_tests;
 
+import com.android.providers.downloads.DownloadManager;
+
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
 import android.provider.Downloads;
 import android.test.AndroidTestCase;
 import android.test.suitebuilder.annotation.MediumTest;
-
-import com.android.providers.downloads.DownloadManager;
 
 /**
  * DownloadProvider allows apps without permission ACCESS_DOWNLOAD_MANAGER to access it -- this is
@@ -32,20 +32,22 @@ import com.android.providers.downloads.DownloadManager;
  */
 @MediumTest
 public class PublicApiAccessTest extends AndroidTestCase {
-    private static final String[] DISALLOWED_COLUMNS = new String[] {
-                    Downloads.Impl.COLUMN_COOKIE_DATA,
-                    Downloads.Impl.COLUMN_REFERER,
-                    Downloads.Impl.COLUMN_USER_AGENT,
-                    Downloads.Impl.COLUMN_NO_INTEGRITY,
-                    Downloads.Impl.COLUMN_NOTIFICATION_CLASS,
-                    Downloads.Impl.COLUMN_NOTIFICATION_EXTRAS,
-                    Downloads.Impl.COLUMN_OTHER_UID,
-                    Downloads.Impl.COLUMN_APP_DATA,
-                    Downloads.Impl.COLUMN_CONTROL,
-                    Downloads.Impl.COLUMN_STATUS,
-            };
+
+    private static final String[] DISALLOWED_COLUMNS = new String[]{
+            Downloads.Impl.COLUMN_COOKIE_DATA,
+            Downloads.Impl.COLUMN_REFERER,
+            Downloads.Impl.COLUMN_USER_AGENT,
+            Downloads.Impl.COLUMN_NO_INTEGRITY,
+            Downloads.Impl.COLUMN_NOTIFICATION_CLASS,
+            Downloads.Impl.COLUMN_NOTIFICATION_EXTRAS,
+            Downloads.Impl.COLUMN_OTHER_UID,
+            Downloads.Impl.COLUMN_APP_DATA,
+            Downloads.Impl.COLUMN_CONTROL,
+            Downloads.Impl.COLUMN_STATUS,
+    };
 
     private ContentResolver mContentResolver;
+
     private DownloadManager mManager;
 
     @Override
@@ -142,7 +144,8 @@ public class PublicApiAccessTest extends AndroidTestCase {
 
     public void testDownloadManagerRequest() {
         // first try a minimal request
-        DownloadManager.Request request = new DownloadManager.Request(Uri.parse("http://localhost/path"));
+        DownloadManager.Request request = new DownloadManager.Request(
+                Uri.parse("http://localhost/path"));
         mManager.enqueue(request);
 
         // now set everything we can, save for external destintion (for which we lack permission)

@@ -19,7 +19,7 @@
           package="com.android.providers.downloads.permission.tests">
 
     <application>
-        <uses-library android:name="android.test.runner" />
+        <uses-library android:name="android.test.runner"/>
     </application>
 
     <!--

@@ -46,7 +46,7 @@ public class DownloadProviderPermissionsTest extends AndroidTestCase {
     /**
      * Test that an app cannot access the /cache filesystem
      * <p>Tests Permission:
-     *   {@link android.Manifest.permission#ACCESS_CACHE_FILESYSTEM}
+     * {@link android.Manifest.permission#ACCESS_CACHE_FILESYSTEM}
      */
     @MediumTest
     public void testAccessCacheFilesystem() throws IOException {
@@ -67,9 +67,9 @@ public class DownloadProviderPermissionsTest extends AndroidTestCase {
     /**
      * Test that an untrusted app cannot write to the download provider
      * <p>Tests Permission:
-     *   {@link com.android.providers.downloads.Manifest.permission#ACCESS_DOWNLOAD_MANAGER}
-     *   and
-     *   {@link android.Manifest.permission#INTERNET}
+     * {@link com.android.providers.downloads.Manifest.permission#ACCESS_DOWNLOAD_MANAGER}
+     * and
+     * {@link android.Manifest.permission#INTERNET}
      */
     @MediumTest
     public void testWriteDownloadProvider() {
@@ -86,7 +86,7 @@ public class DownloadProviderPermissionsTest extends AndroidTestCase {
     /**
      * Test that an untrusted app cannot access the download service
      * <p>Tests Permission:
-     *   {@link com.android.providers.downloads.Manifest.permission#ACCESS_DOWNLOAD_MANAGER}
+     * {@link com.android.providers.downloads.Manifest.permission#ACCESS_DOWNLOAD_MANAGER}
      */
     @MediumTest
     public void testStartDownloadService() {

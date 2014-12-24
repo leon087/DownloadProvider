@@ -16,14 +16,15 @@
 
 package com.android.providers.downloads;
 
-import android.test.suitebuilder.annotation.LargeTest;
-import android.util.Pair;
-
-import com.android.providers.downloads.DownloadManager;
 import com.google.android.collect.Lists;
 import com.google.android.collect.Sets;
 import com.google.mockwebserver.MockResponse;
 import com.google.mockwebserver.SocketPolicy;
+
+import com.android.providers.downloads.DownloadManager;
+
+import android.test.suitebuilder.annotation.LargeTest;
+import android.util.Pair;
 
 import java.util.List;
 import java.util.Set;
@@ -35,6 +36,7 @@ import static java.net.HttpURLConnection.HTTP_OK;
  */
 @LargeTest
 public class ThreadingTest extends AbstractPublicApiTest {
+
     public ThreadingTest() {
         super(new FakeSystemFacade());
     }
@@ -76,7 +78,7 @@ public class ThreadingTest extends AbstractPublicApiTest {
         final long startMillis = mSystemFacade.currentTimeMillis();
         startService(null);
 
-        for (Pair<Download,String> d : downloads) {
+        for (Pair<Download, String> d : downloads) {
             d.first.waitForStatus(DownloadManager.STATUS_SUCCESSFUL, startMillis);
         }
 

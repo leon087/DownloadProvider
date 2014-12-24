@@ -35,14 +35,19 @@ import cm.android.download.provider.Downloads;
 
 /**
  * Activity to show dialogs to the user when a download exceeds a limit on download sizes for
- * mobile networks.  This activity gets started by the background download service when a download's
+ * mobile networks.  This activity gets started by the background download service when a
+ * download's
  * size is discovered to be exceeded one of these thresholds.
  */
 public class SizeLimitActivity extends Activity
         implements DialogInterface.OnCancelListener, DialogInterface.OnClickListener {
+
     private Dialog mDialog;
+
     private Queue<Intent> mDownloadsToShow = new LinkedList<Intent>();
+
     private Uri mCurrentUri;
+
     private Intent mCurrentIntent;
 
     @Override
@@ -95,7 +100,7 @@ public class SizeLimitActivity extends Activity
         String sizeString = Formatter.formatFileSize(this, size);
         String queueText = getString(R.string.button_queue_for_wifi);
         boolean isWifiRequired =
-            mCurrentIntent.getExtras().getBoolean(DownloadInfo.EXTRA_IS_WIFI_REQUIRED);
+                mCurrentIntent.getExtras().getBoolean(DownloadInfo.EXTRA_IS_WIFI_REQUIRED);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_DARK);
         if (isWifiRequired) {
@@ -132,7 +137,7 @@ public class SizeLimitActivity extends Activity
         } else if (!isRequired && which == AlertDialog.BUTTON_POSITIVE) {
             ContentValues values = new ContentValues();
             values.put(Downloads.Impl.COLUMN_BYPASS_RECOMMENDED_SIZE_LIMIT, true);
-            getContentResolver().update(mCurrentUri, values , null, null);
+            getContentResolver().update(mCurrentUri, values, null, null);
         }
         dialogClosed();
     }

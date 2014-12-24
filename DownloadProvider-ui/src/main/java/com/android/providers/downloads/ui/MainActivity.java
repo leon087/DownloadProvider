@@ -24,6 +24,7 @@ import cm.android.download.ui.R;
 
 
 public class MainActivity extends Activity implements View.OnClickListener {
+
     private DownloadManagerPro downloadManager = new DownloadManagerPro();
 
     @Override
@@ -62,6 +63,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private static final String TAG = "ggg";
+
     // an ID for the download, unique across the system. This ID is used to make
     // future calls related to this download.
     long mDownloadId;
@@ -98,7 +100,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         int id = view.getId();
         if (id == R.id.start) {
             DownloadManager.Request request = new DownloadManager.Request(
-                    Uri.parse("http://dl.coolapk.com/dl5.php?url=%2Fapk%2Fcom.netease.vopen&apkname=com.netease.vopen&version=3.1.1&filename=%E7%BD%91%E6%98%93%E5%85%AC%E5%BC%80%E8%AF%BE&file=%2Fapk_file%2F2014%2F1210%2Fcom.netease.vopen-3.1.1.apk&extra=0&h=39d84b94ngdaxh"));
+                    Uri.parse(
+                            "http://dl.coolapk.com/dl5.php?url=%2Fapk%2Fcom.netease.vopen&apkname=com.netease.vopen&version=3.1.1&filename=%E7%BD%91%E6%98%93%E5%85%AC%E5%BC%80%E8%AF%BE&file=%2Fapk_file%2F2014%2F1210%2Fcom.netease.vopen-3.1.1.apk&extra=0&h=39d84b94ngdaxh"));
 
             request.setAllowedNetworkTypes(
                     DownloadManager.Request.NETWORK_MOBILE
@@ -134,9 +137,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
     };
 
     int step = 1000;
+
     QueryRunnable runnable = new QueryRunnable();
 
     class QueryRunnable implements Runnable {
+
         public long DownID;
 
         @Override
@@ -170,11 +175,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 return;
             }
             Log.d(TAG, "ggg Column_id : " + c.getLong(c.getColumnIndex(DownloadManager.COLUMN_ID)));
-            Log.d(TAG, "ggg Column_bytes_downloaded so far : " + c.getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)));
-            Log.d(TAG, "ggg Column last modified timestamp : " + c.getLong(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)));
-            Log.d(TAG, "ggg Column local uri : " + c.getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
-            Log.d(TAG, "ggg Column statue : " + c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
-            Log.d(TAG, "ggg Column reason : " + c.getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
+            Log.d(TAG, "ggg Column_bytes_downloaded so far : " + c
+                    .getLong(c.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR)));
+            Log.d(TAG, "ggg Column last modified timestamp : " + c
+                    .getLong(c.getColumnIndex(DownloadManager.COLUMN_LAST_MODIFIED_TIMESTAMP)));
+            Log.d(TAG, "ggg Column local uri : " + c
+                    .getString(c.getColumnIndex(DownloadManager.COLUMN_LOCAL_URI)));
+            Log.d(TAG, "ggg Column statue : " + c
+                    .getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS)));
+            Log.d(TAG, "ggg Column reason : " + c
+                    .getInt(c.getColumnIndex(DownloadManager.COLUMN_REASON)));
 
             int st = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
 //            Toast.makeText(this, statusMessage(st), Toast.LENGTH_LONG).show();

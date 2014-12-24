@@ -297,7 +297,8 @@ public class DownloadManager {
      * downloads UI.
      */
     // @SdkConstant(SdkConstantType.BROADCAST_INTENT_ACTION)
-    public final static String ACTION_NOTIFICATION_CLICKED = "android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED";
+    public final static String ACTION_NOTIFICATION_CLICKED
+            = "android.intent.action.DOWNLOAD_NOTIFICATION_CLICKED";
 
     /**
      * Intent action to launch an activity to display all downloads.
@@ -309,7 +310,8 @@ public class DownloadManager {
      * Intent extra included with {@link #ACTION_VIEW_DOWNLOADS} to start
      * DownloadApp in sort-by-size mode.
      */
-    public final static String INTENT_EXTRAS_SORT_BY_SIZE = "com.android.providers.downloads.DownloadManager.extra_sortBySize";
+    public final static String INTENT_EXTRAS_SORT_BY_SIZE
+            = "com.android.providers.downloads.DownloadManager.extra_sortBySize";
 
     /**
      * Intent extra included with {@link #ACTION_DOWNLOAD_COMPLETE} intents,
@@ -367,6 +369,7 @@ public class DownloadManager {
      * {@link #setDestinationUri(Uri)}.
      */
     public static class Request {
+
         /**
          * Bit flag for {@link #setAllowedNetworkTypes} corresponding to
          * {@link ConnectivityManager#TYPE_MOBILE}.
@@ -388,19 +391,32 @@ public class DownloadManager {
         public static final int NETWORK_BLUETOOTH = 1 << 2;
 
         private Uri mUri;
+
         private Uri mDestinationUri;
+
         private List<Pair<String, String>> mRequestHeaders = new ArrayList<Pair<String, String>>();
+
         private CharSequence mTitle;
+
         private CharSequence mDescription;
+
         private String mMimeType;
+
         private int mAllowedNetworkTypes = ~0; // default to all network types
+
         // allowed
         private boolean mWriteAllowed = true;
+
         private boolean mRoamingAllowed = true;
+
         private boolean mMeteredAllowed = true;
+
         private boolean mIsVisibleInDownloadsUi = true;
+
         private boolean mScannable = false;
+
         private boolean mUseSystemCache = false;
+
         /**
          * if a file is designated as a MediaScanner scannable file, the
          * following value is stored in the database column
@@ -410,6 +426,7 @@ public class DownloadManager {
         // value of 1 is stored in the above column by DownloadProvider after it
         // is scanned by
         // MediaScanner
+
         /**
          * if a file is designated as a file that should not be scanned by
          * MediaScanner, the following value is stored in the database column
@@ -437,7 +454,8 @@ public class DownloadManager {
         /**
          * This download shows in the notifications after completion ONLY. It is
          * usuable only with
-         * {@link DownloadManager#addCompletedDownload(String, String, boolean, String, String, long, boolean)}
+         * {@link DownloadManager#addCompletedDownload(String, String, boolean, String, String,
+         * long, boolean)}
          * .
          */
         public static final int VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION = 3;
@@ -528,7 +546,7 @@ public class DownloadManager {
          *                               created.
          */
         public Request setDestinationInExternalFilesDir(Context context,
-                                                        String dirType, String subPath) {
+                String dirType, String subPath) {
             final File file = context.getExternalFilesDir(dirType);
             if (file == null) {
                 throw new IllegalStateException(
@@ -566,7 +584,7 @@ public class DownloadManager {
          *                               created.
          */
         public Request setDestinationInExternalPublicDir(String dirType,
-                                                         String subPath) {
+                String subPath) {
             File file = Environment.getExternalStoragePublicDirectory(dirType);
             if (file == null) {
                 throw new IllegalStateException(
@@ -816,7 +834,7 @@ public class DownloadManager {
         }
 
         private void putIfNonNull(ContentValues contentValues, String key,
-                                  Object value) {
+                Object value) {
             if (value != null) {
                 contentValues.put(key, value.toString());
             }
@@ -827,6 +845,7 @@ public class DownloadManager {
      * This class may be used to filter download manager queries.
      */
     public static class Query {
+
         /**
          * Constant for use with {@link #orderBy}
          *
@@ -842,9 +861,13 @@ public class DownloadManager {
         public static final int ORDER_DESCENDING = 2;
 
         private long[] mIds = null;
+
         private Integer mStatusFlags = null;
+
         private String mOrderByColumn = Downloads.Impl.COLUMN_LAST_MODIFICATION;
+
         private int mOrderDirection = ORDER_DESCENDING;
+
         private boolean mOnlyIncludeVisibleInDownloadsUi = false;
 
         /**
@@ -920,7 +943,7 @@ public class DownloadManager {
          * @return the Cursor returned by ContentResolver.query()
          */
         Cursor runQuery(ContentResolver resolver, String[] projection,
-                        Uri baseUri) {
+                Uri baseUri) {
             Uri uri = baseUri;
             List<String> selectionParts = new ArrayList<String>();
             String[] selectionArgs = null;
@@ -995,7 +1018,9 @@ public class DownloadManager {
     }
 
     private ContentResolver mResolver;
+
     private String mPackageName;
+
     private Uri mBaseUri = Downloads.Impl.CONTENT_URI;
 
     /**
@@ -1193,7 +1218,8 @@ public class DownloadManager {
                     if (destination == Downloads.Impl.DESTINATION_CACHE_PARTITION
                             || destination == Downloads.Impl.DESTINATION_SYSTEMCACHE_PARTITION
                             || destination == Downloads.Impl.DESTINATION_CACHE_PARTITION_NOROAMING
-                            || destination == Downloads.Impl.DESTINATION_CACHE_PARTITION_PURGEABLE) {
+                            || destination
+                            == Downloads.Impl.DESTINATION_CACHE_PARTITION_PURGEABLE) {
                         // return private uri
                         return ContentUris.withAppendedId(
                                 Downloads.Impl.CONTENT_URI, id);
@@ -1358,7 +1384,8 @@ public class DownloadManager {
      *                                view media (for example, Gallery app).
      * @param mimeType                mimetype of the file.
      * @param path                    absolute pathname to the file. The file should be
-     *                                world-readable, so that it can be managed by the Downloads App
+     *                                world-readable, so that it can be managed by the Downloads
+     *                                App
      *                                and any other app that is used to read it (for example,
      *                                Gallery app to display the file, if the file contents
      *                                represent a video/image).
@@ -1369,8 +1396,8 @@ public class DownloadManager {
      * this download.
      */
     public long addCompletedDownload(String title, String description,
-                                     boolean isMediaScannerScannable, String mimeType, String path,
-                                     long length, boolean showNotification) {
+            boolean isMediaScannerScannable, String mimeType, String path,
+            long length, boolean showNotification) {
         return addCompletedDownload(title, description,
                 isMediaScannerScannable, mimeType, path, length,
                 showNotification, false);
@@ -1380,8 +1407,8 @@ public class DownloadManager {
      * {@hide}
      */
     public long addCompletedDownload(String title, String description,
-                                     boolean isMediaScannerScannable, String mimeType, String path,
-                                     long length, boolean showNotification, boolean allowWrite) {
+            boolean isMediaScannerScannable, String mimeType, String path,
+            long length, boolean showNotification, boolean allowWrite) {
         // make sure the input args are non-null/non-zero
         validateArgumentIsNonEmpty("title", title);
         validateArgumentIsNonEmpty("description", description);
@@ -1418,7 +1445,8 @@ public class DownloadManager {
         return Long.parseLong(downloadUri.getLastPathSegment());
     }
 
-    private static final String NON_DOWNLOADMANAGER_DOWNLOAD = "non-dwnldmngr-download-dont-retry2download";
+    private static final String NON_DOWNLOADMANAGER_DOWNLOAD
+            = "non-dwnldmngr-download-dont-retry2download";
 
     private static void validateArgumentIsNonEmpty(String paramName, String val) {
         if (TextUtils.isEmpty(val)) {
@@ -1472,6 +1500,7 @@ public class DownloadManager {
      * underlying data.
      */
     private static class CursorTranslator extends CursorWrapper {
+
         private Uri mBaseUri;
 
         public CursorTranslator(Cursor cursor, Uri baseUri) {

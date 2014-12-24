@@ -47,6 +47,7 @@ import static cm.android.download.providers.downloads.Constants.LOGV;
  * to free up space.
  */
 class StorageManager {
+
     /**
      * the max amount of space allowed to be taken up by the downloads data dir
      */
@@ -59,7 +60,8 @@ class StorageManager {
      * threshold (in bytes) beyond which the low space warning kicks in and attempt is made to
      * purge some downloaded files to make space
      */
-    private static final long sDownloadDataDirLowSpaceThreshold = 10 * sMaxdownloadDataDirSize / 100;
+    private static final long sDownloadDataDirLowSpaceThreshold = 10 * sMaxdownloadDataDirSize
+            / 100;
 //  private static final long sDownloadDataDirLowSpaceThreshold =
 //  Resources.getSystem().getInteger(
 //          R.integer.config_downloadDataDirLowSpaceThreshold)
@@ -85,6 +87,7 @@ class StorageManager {
      * how often do we need to perform checks on space to make sure space is available
      */
     private static final int FREQUENCY_OF_CHECKS_ON_SPACE_AVAILABILITY = 1024 * 1024; // 1MB
+
     private int mBytesDownloadedSinceLastCheckOnSpace = 0;
 
     /**
@@ -106,6 +109,7 @@ class StorageManager {
      * The value is specified in terms of num of downloads since last time the cleanup was done.
      */
     private static final int FREQUENCY_OF_DATABASE_N_FILESYSTEM_CLEANUP = 250;
+
     private int mNumDownloadsSoFar = 0;
 
     synchronized void incrementNumDownloadsSoFar() {
@@ -332,7 +336,8 @@ class StorageManager {
                 Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI,
                 null,
                 "( " +
-                        Downloads.Impl.COLUMN_STATUS + " = '" + Downloads.Impl.STATUS_SUCCESS + "' AND " +
+                        Downloads.Impl.COLUMN_STATUS + " = '" + Downloads.Impl.STATUS_SUCCESS
+                        + "' AND " +
                         Downloads.Impl.COLUMN_DESTINATION + " = ? )",
                 bindArgs,
                 Downloads.Impl.COLUMN_LAST_MODIFICATION);
@@ -344,7 +349,9 @@ class StorageManager {
             final int dataIndex = cursor.getColumnIndex(Downloads.Impl._DATA);
             while (cursor.moveToNext() && totalFreed < targetBytes) {
                 final String data = cursor.getString(dataIndex);
-                if (TextUtils.isEmpty(data)) continue;
+                if (TextUtils.isEmpty(data)) {
+                    continue;
+                }
 
                 File file = new File(data);
                 if (Constants.LOGV) {

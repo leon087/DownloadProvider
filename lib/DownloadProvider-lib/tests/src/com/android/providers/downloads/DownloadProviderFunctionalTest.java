@@ -16,6 +16,9 @@
 
 package com.android.providers.downloads;
 
+import com.google.mockwebserver.MockWebServer;
+import com.google.mockwebserver.RecordedRequest;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
@@ -24,9 +27,6 @@ import android.os.Environment;
 import android.os.SystemClock;
 import android.provider.Downloads;
 import android.test.suitebuilder.annotation.LargeTest;
-
-import com.google.mockwebserver.MockWebServer;
-import com.google.mockwebserver.RecordedRequest;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -37,13 +37,15 @@ import static android.text.format.DateUtils.SECOND_IN_MILLIS;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 /**
- * This test exercises the entire download manager working together -- it requests downloads through
+ * This test exercises the entire download manager working together -- it requests downloads
+ * through
  * the {@link DownloadProvider}, just like a normal client would, and runs the
  * {@link DownloadService} with start intents.  It sets up a {@link MockWebServer} running on the
  * device to serve downloads.
  */
 @LargeTest
 public class DownloadProviderFunctionalTest extends AbstractDownloadProviderFunctionalTest {
+
     private static final String TAG = "DownloadManagerFunctionalTest";
 
     public DownloadProviderFunctionalTest() {
@@ -64,7 +66,7 @@ public class DownloadProviderFunctionalTest extends AbstractDownloadProviderFunc
         assertEquals(path, request.getPath());
         assertEquals(FILE_CONTENT, getDownloadContents(downloadUri));
         assertStartsWith(Environment.getExternalStorageDirectory().getPath(),
-                         getDownloadFilename(downloadUri));
+                getDownloadFilename(downloadUri));
     }
 
     public void testDownloadToCache() throws Exception {
@@ -72,11 +74,11 @@ public class DownloadProviderFunctionalTest extends AbstractDownloadProviderFunc
 
         Uri downloadUri = requestDownload("/path");
         updateDownload(downloadUri, Downloads.Impl.COLUMN_DESTINATION,
-                       Integer.toString(Downloads.Impl.DESTINATION_CACHE_PARTITION));
+                Integer.toString(Downloads.Impl.DESTINATION_CACHE_PARTITION));
         runUntilStatus(downloadUri, Downloads.Impl.STATUS_SUCCESS);
         assertEquals(FILE_CONTENT, getDownloadContents(downloadUri));
         assertStartsWith(getContext().getCacheDir().getAbsolutePath(),
-                         getDownloadFilename(downloadUri));
+                getDownloadFilename(downloadUri));
     }
 
     public void testRoaming() throws Exception {
@@ -93,7 +95,7 @@ public class DownloadProviderFunctionalTest extends AbstractDownloadProviderFunc
         // when roaming is disallowed, the download should pause...
         downloadUri = requestDownload("/path");
         updateDownload(downloadUri, Downloads.Impl.COLUMN_DESTINATION,
-                       Integer.toString(Downloads.Impl.DESTINATION_CACHE_PARTITION_NOROAMING));
+                Integer.toString(Downloads.Impl.DESTINATION_CACHE_PARTITION_NOROAMING));
         runUntilStatus(downloadUri, Downloads.Impl.STATUS_WAITING_FOR_NETWORK);
 
         // ...and pick up when we're off roaming
@@ -115,7 +117,7 @@ public class DownloadProviderFunctionalTest extends AbstractDownloadProviderFunc
 
     private void runUntilStatus(Uri downloadUri, int expected) throws Exception {
         startService(null);
-        
+
         int actual = -1;
 
         final long timeout = SystemClock.elapsedRealtime() + (15 * SECOND_IN_MILLIS);
@@ -140,7 +142,7 @@ public class DownloadProviderFunctionalTest extends AbstractDownloadProviderFunc
     }
 
     private String getDownloadField(Uri downloadUri, String column) {
-        final String[] columns = new String[] {column};
+        final String[] columns = new String[]{column};
         Cursor cursor = mResolver.query(downloadUri, columns, null, null, null);
         try {
             assertEquals(1, cursor.getCount());

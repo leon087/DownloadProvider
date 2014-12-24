@@ -34,6 +34,7 @@ import static cm.android.download.DownloadManager.COLUMN_URI;
 import static cm.android.download.provider.Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI;
 
 public class OpenHelper {
+
     /**
      * Build an {@link Intent} to view the download at current {@link Cursor}
      * position, handling subtleties around installing packages.

@@ -61,8 +61,8 @@ android {
 
             signingConfig signingConfigs.debug
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
-                    new File(project(':lib:MyUtil').getProjectDir(), 'util-proguard-rules.pro'),
-//                    new File(project(':lib:MyCommon').getProjectDir(), 'common-proguard-rules.pro'),
+                    new File(project(':lib:MyLibrary').getProjectDir(), 'util-proguard-rules.pro'),
+                    new File(project(':lib:MyLibrary').getProjectDir(), 'common-proguard-rules.pro'),
                     'proguard-project.txt'
         }
 

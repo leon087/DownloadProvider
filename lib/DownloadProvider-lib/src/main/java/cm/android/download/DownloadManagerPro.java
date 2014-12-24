@@ -1,14 +1,14 @@
 package cm.android.download;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -18,12 +18,18 @@ import cm.android.download.providers.downloads.DownloadService;
 import cm.android.sdk.content.BaseBroadcastReceiver;
 import cm.android.util.ObjectUtil;
 
-public final class DownloadManagerPro {
+public class DownloadManagerPro {
+
     private static final Logger logger = LoggerFactory.getLogger("download");
+
     private DownloadManager downloadManager;
+
     private Context context;
+
     private final MyDownloadReceiver myDownloadReceiver = new MyDownloadReceiver();
+
     private final AtomicBoolean isInitAtomic = new AtomicBoolean(false);
+
     private DownloadReceiver downloadReceiver = new DownloadReceiver();
 
     public void init(Context context) {
@@ -102,7 +108,7 @@ public final class DownloadManagerPro {
         // 设置mime类型，这里看服务器配置，一般国家化的都为utf-8编码。
         // request.setMimeType(String mimeType)
 
-        request.setVisibleInDownloadsUi(false); // 设置下载管理类在处理过程中的界面是否显示
+        request.setVisibleInDownloadsUi(true); // 设置下载管理类在处理过程中的界面是否显示
         return request;
     }
 
@@ -119,8 +125,6 @@ public final class DownloadManagerPro {
 
     /**
      * 暂停
-     *
-     * @param ids
      */
     public void pause(long... ids) {
         downloadManager.pauseDownload(ids);
@@ -128,8 +132,6 @@ public final class DownloadManagerPro {
 
     /**
      * 继续
-     *
-     * @param ids
      */
     public void resume(long... ids) {
         downloadManager.resumeDownload(ids);
@@ -137,8 +139,6 @@ public final class DownloadManagerPro {
 
     /**
      * 删除
-     *
-     * @param ids
      */
     public int remove(long... ids) {
         return downloadManager.remove(ids);
@@ -146,8 +146,6 @@ public final class DownloadManagerPro {
 
     /**
      * 重新下载，下载完成后才能调用（成功或失败）
-     *
-     * @param ids
      */
     public void restart(long... ids) {
         downloadManager.restartDownload(ids);
@@ -184,6 +182,7 @@ public final class DownloadManagerPro {
     }
 
     private class MyDownloadReceiver extends BaseBroadcastReceiver {
+
         MyDownloadReceiver() {
         }
 
@@ -192,7 +191,7 @@ public final class DownloadManagerPro {
             long reference = intent.getLongExtra(
                     DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             DownloadManager.Query myDownloadQuery = query(reference);
-            Cursor cursor = downloadManager.query(myDownloadQuery);
+            Cursor cursor = query(myDownloadQuery);
             if (cursor.moveToFirst()) {
                 int mStatusColumnId = cursor
                         .getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS);
@@ -226,6 +225,7 @@ public final class DownloadManagerPro {
     }
 
     public static interface OnCompleteListener {
+
         void onDownloadSuccess(DownloadManager.Query downloadQuery);
 
         void onDownloadFailure(DownloadManager.Query downloadQuery);
@@ -233,6 +233,7 @@ public final class DownloadManagerPro {
 
     private Set<OnCompleteListener> onCompleteListeners = ObjectUtil
             .newHashSet();
+
     private final OnCompleteListener listener = new OnCompleteListener() {
         @Override
         public void onDownloadSuccess(DownloadManager.Query downloadQuery) {
