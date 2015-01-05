@@ -24,7 +24,7 @@ public class DownloadManagerPro {
 
     private DownloadManager downloadManager;
 
-    private Context context;
+    protected Context context;
 
     private final MyDownloadReceiver myDownloadReceiver = new MyDownloadReceiver();
 
