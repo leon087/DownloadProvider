@@ -1321,7 +1321,7 @@ public class DownloadManager {
      * connection; or null if there's no limit
      */
     public static Long getMaxBytesOverMobile(Context context) {
-        return -1L;
+        return DownloadConfig.DOWNLOAD_MAX_BYTES_OVER_MOBILE;
         // try {
         // return Settings.Global.getLong(context.getContentResolver(),
         // Settings.Global.DOWNLOAD_MAX_BYTES_OVER_MOBILE);
@@ -1341,7 +1341,7 @@ public class DownloadManager {
      * a mobile connection; or null if there's no recommended limit.
      */
     public static Long getRecommendedMaxBytesOverMobile(Context context) {
-        return -1L;
+        return DownloadConfig.DOWNLOAD_RECOMMENDED_MAX_BYTES_OVER_MOBILE;
         // try {
         // return Settings.Global.getLong(context.getContentResolver(),
         // Settings.Global.DOWNLOAD_RECOMMENDED_MAX_BYTES_OVER_MOBILE);
