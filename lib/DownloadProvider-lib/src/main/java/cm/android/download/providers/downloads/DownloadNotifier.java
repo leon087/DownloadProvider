@@ -245,7 +245,7 @@ public class DownloadNotifier {
                                 R.string.download_remaining,
                                 // DateUtils.formatDuration(remainingMillis));
                                 // // FIXME
-                                "" + remainingMillis);
+                                "" + Helpers.formatDuration(mContext, remainingMillis));
                     }
 
                     builder.setProgress(100, percent, false);
