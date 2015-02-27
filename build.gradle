@@ -4,9 +4,10 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.android.tools.build:gradle:1.1.0'
     }
 }
+
 allprojects {
     tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
 
@@ -14,5 +15,7 @@ allprojects {
         jcenter()
     }
 }
+
 task wrapper(type: Wrapper) { gradleVersion = '2.2.1' }
+
 apply plugin: 'android-reporting'
