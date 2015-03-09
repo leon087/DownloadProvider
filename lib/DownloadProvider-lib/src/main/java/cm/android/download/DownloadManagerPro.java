@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import cm.android.download.providers.downloads.DownloadReceiver;
 import cm.android.download.providers.downloads.DownloadService;
 import cm.android.sdk.content.BaseBroadcastReceiver;
-import cm.android.util.ObjectUtil;
+import cm.java.util.ObjectUtil;
 
 public class DownloadManagerPro {
 

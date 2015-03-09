@@ -177,6 +177,8 @@ class StorageManager {
                     dir = mDownloadDataDir;
                 } else if (path.startsWith(mSystemCacheDir.getPath())) {
                     dir = mSystemCacheDir;
+                } else {
+                    dir = new File(path).getParentFile();
                 }
                 break;
         }

@@ -789,8 +789,8 @@ public final class DownloadProvider extends ContentProvider {
             final String externalPath = Environment
                     .getExternalStorageDirectory().getAbsolutePath();
             if (!canonicalPath.startsWith(externalPath)) {
-                throw new SecurityException(
-                        "Destination must be on external storage: " + uri);
+//                throw new SecurityException(
+//                        "Destination must be on external storage: " + uri);
             }
         } catch (IOException e) {
             throw new SecurityException("Problem resolving path: " + uri);
