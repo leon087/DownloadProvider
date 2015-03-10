@@ -133,7 +133,8 @@ public class DownloadReceiver extends BaseBroadcastReceiver {
     }
 
     /**
-     * Mark the given {@link DownloadManager#COLUMN_ID} as being acknowledged by
+     * Mark the given {@link cm.android.download.DownloadManager#COLUMN_ID} as being acknowledged
+     * by
      * user so it's not renewed later.
      */
     private void hideNotification(Context context, long id) {
@@ -168,7 +169,7 @@ public class DownloadReceiver extends BaseBroadcastReceiver {
 
     /**
      * Start activity to display the file represented by the given
-     * {@link DownloadManager#COLUMN_ID}.
+     * {@link cm.android.download.DownloadManager#COLUMN_ID}.
      */
     private void openDownload(Context context, long id) {
         final Intent intent = OpenHelper.buildViewIntent(context, id);

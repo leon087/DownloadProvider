@@ -20,7 +20,7 @@ import java.io.PrintWriter;
 import java.io.Writer;
 
 /**
- * Lightweight wrapper around {@link PrintWriter} that automatically indents
+ * Lightweight wrapper around {@link java.io.PrintWriter} that automatically indents
  * newlines based on internal state. It also automatically wraps long lines
  * based on given line length.
  * <p>

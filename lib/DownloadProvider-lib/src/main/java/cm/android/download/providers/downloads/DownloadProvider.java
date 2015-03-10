@@ -196,7 +196,8 @@ public final class DownloadProvider extends ContentProvider {
     /**
      * This class encapsulates a SQL where clause and its parameters. It makes
      * it possible for shared methods (like
-     * {@link DownloadProvider#getWhereClause(Uri, String, String[], int)}) to
+     * {@link cm.android.download.providers.downloads.DownloadProvider#getWhereClause(android.net.Uri,
+     * String, String[], int)}) to
      * return both pieces of information, and provides some utility logic to
      * ease piece-by-piece construction of selections.
      */
@@ -677,7 +678,7 @@ public final class DownloadProvider extends ContentProvider {
                                         clazz);
                     }
                 }
-            } catch (PackageManager.NameNotFoundException ex) {
+            } catch (NameNotFoundException ex) {
                                 /* ignored for now */
             }
         }
@@ -746,8 +747,8 @@ public final class DownloadProvider extends ContentProvider {
         }
 
         insertRequestHeaders(db, rowID, values);
-		/*
-		 * requests coming from DownloadManager.addCompletedDownload(String,
+                /*
+                 * requests coming from DownloadManager.addCompletedDownload(String,
 		 * String, String, boolean, String, String, long) need special treatment
 		 */
         Context context = getContext();
@@ -827,11 +828,11 @@ public final class DownloadProvider extends ContentProvider {
         // validate the destination column
         if (values.getAsInteger(Downloads.Impl.COLUMN_DESTINATION)
                 == Downloads.Impl.DESTINATION_NON_DOWNLOADMANAGER_DOWNLOAD) {
-			/*
-			 * this row is inserted by
-			 * DownloadManager.addCompletedDownload(String, String, String,
-			 * boolean, String, String, long)
-			 */
+           /*
+            * this row is inserted by
+            * DownloadManager.addCompletedDownload(String, String, String,
+	    * boolean, String, String, long)
+	    */
             values.remove(Downloads.Impl.COLUMN_TOTAL_BYTES);
             values.remove(Downloads.Impl._DATA);
             values.remove(Downloads.Impl.COLUMN_STATUS);
@@ -994,7 +995,7 @@ public final class DownloadProvider extends ContentProvider {
     private void logVerboseQueryInfo(String[] projection,
             final String selection, final String[] selectionArgs,
             final String sort, SQLiteDatabase db) {
-        java.lang.StringBuilder sb = new java.lang.StringBuilder();
+        StringBuilder sb = new StringBuilder();
         sb.append("starting query, database is ");
         if (db != null) {
             sb.append("not ");
@@ -1394,7 +1395,7 @@ public final class DownloadProvider extends ContentProvider {
             } else {
                 String filename = cursor.getString(0);
                 Log.v(Constants.TAG, "filename in openFile: " + filename);
-                if (new java.io.File(filename).isFile()) {
+                if (new File(filename).isFile()) {
                     Log.v(Constants.TAG, "file exists in openFile");
                 }
             }

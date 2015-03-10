@@ -248,17 +248,26 @@
 
     <plurals name="duration_seconds">
         <item quantity="one">1 second</item>
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> seconds</item>
+        <item quantity="other">
+            <xliff:g id="count">%d</xliff:g>
+            seconds
+        </item>
     </plurals>
     <!-- Phrase describing a time duration using minutes [CHAR LIMIT=16] -->
     <plurals name="duration_minutes">
         <item quantity="one">1 minute</item>
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> minutes</item>
+        <item quantity="other">
+            <xliff:g id="count">%d</xliff:g>
+            minutes
+        </item>
     </plurals>
     <!-- Phrase describing a time duration using hours [CHAR LIMIT=16] -->
     <plurals name="duration_hours">
         <item quantity="one">1 hour</item>
-        <item quantity="other"><xliff:g id="count">%d</xliff:g> hours</item>
+        <item quantity="other">
+            <xliff:g id="count">%d</xliff:g>
+            hours
+        </item>
     </plurals>
 
 </resources>

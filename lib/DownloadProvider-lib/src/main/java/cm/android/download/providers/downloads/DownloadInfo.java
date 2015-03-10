@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
@@ -330,8 +329,8 @@ public class DownloadInfo {
     private List<Pair<String, String>> mRequestHeaders = new ArrayList<Pair<String, String>>();
 
     /**
-     * Result of last {@link DownloadThread} started by
-     * {@link #startDownloadIfReady(ExecutorService)}.
+     * Result of last {@link cm.android.download.providers.downloads.DownloadThread} started by
+     * {@link #startDownloadIfReady(java.util.concurrent.ExecutorService)}.
      */
     @GuardedBy("this")
     private Future<?> mSubmittedTask;
@@ -542,8 +541,9 @@ public class DownloadInfo {
 
     /**
      * If download is ready to start, and isn't already pending or executing,
-     * create a {@link DownloadThread} and enqueue it into given
-     * {@link Executor}.
+     * create a {@link cm.android.download.providers.downloads.DownloadThread} and enqueue it into
+     * given
+     * {@link java.util.concurrent.Executor}.
      *
      * @return If actively downloading.
      */
@@ -569,7 +569,7 @@ public class DownloadInfo {
 
     /**
      * If download is ready to be scanned, enqueue it into the given
-     * {@link DownloadScanner}.
+     * {@link cm.android.download.providers.downloads.DownloadScanner}.
      *
      * @return If actively scanning.
      */

@@ -52,9 +52,10 @@ import static cm.android.download.providers.downloads.Constants.TAG;
 //import android.util.LongSparseLongArray;
 
 /**
- * Update {@link NotificationManager} to reflect current {@link DownloadInfo}
+ * Update {@link android.app.NotificationManager} to reflect current {@link
+ * cm.android.download.providers.downloads.DownloadInfo}
  * states. Collapses similar downloads into a single notification, and builds
- * {@link PendingIntent} that launch towards {@link DownloadReceiver}.
+ * {@link android.app.PendingIntent} that launch towards {@link cm.android.download.providers.downloads.DownloadReceiver}.
  */
 public class DownloadNotifier {
 
@@ -72,21 +73,22 @@ public class DownloadNotifier {
      * Currently active notifications, mapped from clustering tag to timestamp
      * when first shown.
      *
-     * @see #buildNotificationTag(DownloadInfo)
+     * @see #buildNotificationTag(cm.android.download.providers.downloads.DownloadInfo)
      */
     @GuardedBy("mActiveNotifs")
     private final HashMap<String, Long> mActiveNotifs = Maps.newHashMap();
 
     /**
-     * Current speed of active downloads, mapped from {@link DownloadInfo#mId}
+     * Current speed of active downloads, mapped from {@link cm.android.download.providers.downloads.DownloadInfo#mId}
      * to speed in bytes per second.
      */
     @GuardedBy("mDownloadSpeed")
     private final HashMap<Long, Long> mDownloadSpeed = new HashMap<Long, Long>();
 
     /**
-     * Last time speed was reproted, mapped from {@link DownloadInfo#mId} to
-     * {@link SystemClock#elapsedRealtime()}.
+     * Last time speed was reproted, mapped from {@link cm.android.download.providers.downloads.DownloadInfo#mId}
+     * to
+     * {@link android.os.SystemClock#elapsedRealtime()}.
      */
     @GuardedBy("mDownloadSpeed")
     private final HashMap<Long, Long> mDownloadTouch = new HashMap<Long, Long>();
@@ -118,8 +120,9 @@ public class DownloadNotifier {
     }
 
     /**
-     * Update {@link NotificationManager} to reflect the given set of
-     * {@link DownloadInfo}, adding, collapsing, and removing as needed.
+     * Update {@link android.app.NotificationManager} to reflect the given set of
+     * {@link cm.android.download.providers.downloads.DownloadInfo}, adding, collapsing, and
+     * removing as needed.
      */
     public void updateWith(Collection<DownloadInfo> downloads) {
         synchronized (mActiveNotifs) {
@@ -363,8 +366,9 @@ public class DownloadNotifier {
     }
 
     /**
-     * Build tag used for collapsing several {@link DownloadInfo} into a single
-     * {@link Notification}.
+     * Build tag used for collapsing several {@link cm.android.download.providers.downloads.DownloadInfo}
+     * into a single
+     * {@link android.app.Notification}.
      */
     private static String buildNotificationTag(DownloadInfo info) {
         if (info.mStatus == Downloads.Impl.STATUS_QUEUED_FOR_WIFI) {
@@ -381,7 +385,7 @@ public class DownloadNotifier {
 
     /**
      * Return the cluster type of the given tag, as created by
-     * {@link #buildNotificationTag(DownloadInfo)}.
+     * {@link #buildNotificationTag(cm.android.download.providers.downloads.DownloadInfo)}.
      */
     private static int getNotificationTagType(String tag) {
         return Integer.parseInt(tag.substring(0, tag.indexOf(':')));
