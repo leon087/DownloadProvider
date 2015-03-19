@@ -263,7 +263,7 @@ public class DownloadReceiver extends BaseBroadcastReceiver {
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         //
         filter.addAction("android.intent.action.MEDIA_MOUNTED");
-        filter.addDataScheme("file");
+//        filter.addDataScheme("file");
         return filter;
     }
 }

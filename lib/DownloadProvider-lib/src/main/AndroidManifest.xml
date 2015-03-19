@@ -74,25 +74,25 @@
                 android:name="cm.android.download.providers.downloads.DownloadProvider"
                 android:authorities="cm.android.downloads">
 
-            <!-- Anyone can access /my_downloads, the provider internally restricts access by UID for -->
-            <!-- these URIs -->
-            <path-permission
-                    android:pathPrefix="/my_downloads"
-                    android:permission="android.permission.INTERNET"/>
-            <!-- to access /all_downloads, ACCESS_ALL_DOWNLOADS permission is required -->
-            <path-permission
-                    android:pathPrefix="/all_downloads"
-                    android:permission="cm.android.permission.ACCESS_ALL_DOWNLOADS"/>
-            <!-- Temporary, for backwards compatibility -->
-            <path-permission
-                    android:pathPrefix="/download"
-                    android:permission="android.permission.INTERNET"/>
-            <!-- Apps with access to /all_downloads/... can grant permissions, allowing them to share -->
-            <!-- downloaded files with other viewers -->
-            <grant-uri-permission android:pathPrefix="/all_downloads/"/>
-            <!-- Apps with access to /my_downloads/... can grant permissions, allowing them to share -->
-            <!-- downloaded files with other viewers -->
-            <grant-uri-permission android:pathPrefix="/my_downloads/"/>
+            <!--&lt;!&ndash; Anyone can access /my_downloads, the provider internally restricts access by UID for &ndash;&gt;-->
+            <!--&lt;!&ndash; these URIs &ndash;&gt;-->
+            <!--<path-permission-->
+                    <!--android:pathPrefix="/my_downloads"-->
+                    <!--android:permission="android.permission.INTERNET"/>-->
+            <!--&lt;!&ndash; to access /all_downloads, ACCESS_ALL_DOWNLOADS permission is required &ndash;&gt;-->
+            <!--<path-permission-->
+                    <!--android:pathPrefix="/all_downloads"-->
+                    <!--android:permission="cm.android.permission.ACCESS_ALL_DOWNLOADS"/>-->
+            <!--&lt;!&ndash; Temporary, for backwards compatibility &ndash;&gt;-->
+            <!--<path-permission-->
+                    <!--android:pathPrefix="/download"-->
+                    <!--android:permission="android.permission.INTERNET"/>-->
+            <!--&lt;!&ndash; Apps with access to /all_downloads/... can grant permissions, allowing them to share &ndash;&gt;-->
+            <!--&lt;!&ndash; downloaded files with other viewers &ndash;&gt;-->
+            <!--<grant-uri-permission android:pathPrefix="/all_downloads/"/>-->
+            <!--&lt;!&ndash; Apps with access to /my_downloads/... can grant permissions, allowing them to share &ndash;&gt;-->
+            <!--&lt;!&ndash; downloaded files with other viewers &ndash;&gt;-->
+            <!--<grant-uri-permission android:pathPrefix="/my_downloads/"/>-->
         </provider>
 
         <service

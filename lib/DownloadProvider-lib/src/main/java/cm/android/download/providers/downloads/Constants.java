@@ -138,7 +138,7 @@ public class Constants {
      * The number of times that the download manager will retry its network
      * operations when no progress is happening before it gives up.
      */
-    public static final int MAX_RETRIES = 5;
+    public static final int MAX_RETRIES = 3;
 
     /**
      * The minimum amount of time that the download manager accepts for
@@ -162,7 +162,8 @@ public class Constants {
      * Each subsequent retry grows exponentially, doubling each time.
      * The time is in seconds.
      */
-    public static final int RETRY_FIRST_DELAY = 30;
+    public static final int RETRY_FIRST_DELAY = 3;
+//    public static final int RETRY_FIRST_DELAY = 30;
 
     /** Enable separate connectivity logging */
     static final boolean LOGX = false;
