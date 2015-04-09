@@ -81,8 +81,8 @@ public class DownloadManagerPro {
                 | DownloadManager.Request.NETWORK_WIFI);
 
         // 对于下载，考虑到流量费用，这里是否允许使用漫游。
-        request.setAllowedOverRoaming(false);
-
+        request.setAllowedOverRoaming(true);
+        request.setAllowedOverMetered(true);
         request.setShowRunningNotification(true); // 是否显示下载进度的提示
         // request.setTitle("Downloading"); //设置notification的标题
         // 设置一个描述信息，主要是最终显示的notification提示，可以随便写个自己区别
