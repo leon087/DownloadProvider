@@ -19,6 +19,8 @@ package cm.android.download;
 //import android.annotation.SdkConstant;
 //import android.annotation.SdkConstant.SdkConstantType;
 
+import org.slf4j.LoggerFactory;
+
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -586,6 +588,29 @@ public class DownloadManager {
         public Request setDestinationInExternalPublicDir(String dirType,
                 String subPath) {
             File file = Environment.getExternalStoragePublicDirectory(dirType);
+            LoggerFactory.getLogger("ggg setDestinationInExternalPublicDir").info("ggg setDestination path = " + file.getAbsolutePath());
+            if (file == null) {
+                throw new IllegalStateException(
+                        "Failed to get external storage public directory");
+            } else if (file.exists()) {
+                if (!file.isDirectory()) {
+                    throw new IllegalStateException(file.getAbsolutePath()
+                            + " already exists and is not a directory");
+                }
+            } else {
+                if (!file.mkdirs()) {
+                    throw new IllegalStateException(
+                            "Unable to create directory: "
+                                    + file.getAbsolutePath());
+                }
+            }
+            setDestinationFromBase(file, subPath);
+            return this;
+        }
+
+        public Request setDestinationInExternalPublicDir(File file,
+                String subPath) {
+            LoggerFactory.getLogger("ggg setDestinationInExternalPublicDir").info("ggg setDestination path = " + file.getAbsolutePath());
             if (file == null) {
                 throw new IllegalStateException(
                         "Failed to get external storage public directory");
