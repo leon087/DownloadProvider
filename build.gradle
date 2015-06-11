@@ -15,4 +15,4 @@ allprojects {
     }
 }
 task wrapper(type: Wrapper) { gradleVersion = '2.4' }
-apply plugin: 'android-reporting'
+//apply plugin: 'android-reporting'
