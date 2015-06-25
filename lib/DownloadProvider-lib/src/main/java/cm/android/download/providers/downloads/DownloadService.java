@@ -125,6 +125,9 @@ public class DownloadService extends Service {
 
     private volatile int mLastStartId;
 
+    //TODO ggg
+    private DownloadReceiver downloadReceiver = new DownloadReceiver();
+
     /**
      * Receives notifications when the data in the content provider changes
      */
@@ -178,6 +181,9 @@ public class DownloadService extends Service {
         mObserver = new DownloadManagerContentObserver();
         getContentResolver().registerContentObserver(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI,
                 true, mObserver);
+
+        //TODO ggg
+        downloadReceiver.register(this);
     }
 
     @Override
@@ -193,6 +199,9 @@ public class DownloadService extends Service {
 
     @Override
     public void onDestroy() {
+        //TODO ggg
+        downloadReceiver.unregister();
+
         getContentResolver().unregisterContentObserver(mObserver);
         mScanner.shutdown();
         mUpdateThread.quit();
@@ -276,14 +285,15 @@ public class DownloadService extends Service {
                 // ignored, since any updates important enough to initiate tasks
                 // will always be delivered with a new startId.
 
-                if (stopSelfResult(startId)) {
-                    if (DEBUG_LIFECYCLE) {
-                        Log.v(TAG, "Nothing left; stopped");
-                    }
-                    getContentResolver().unregisterContentObserver(mObserver);
-                    mScanner.shutdown();
-                    mUpdateThread.quit();
-                }
+                //TODO ggg 禁止杀死该服务
+//                if (stopSelfResult(startId)) {
+//                    if (DEBUG_LIFECYCLE) {
+//                        Log.v(TAG, "Nothing left; stopped");
+//                    }
+//                    getContentResolver().unregisterContentObserver(mObserver);
+//                    mScanner.shutdown();
+//                    mUpdateThread.quit();
+//                }
             }
 
             return true;

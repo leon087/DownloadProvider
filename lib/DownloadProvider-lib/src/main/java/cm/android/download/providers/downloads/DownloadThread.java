@@ -550,6 +550,11 @@ public class DownloadThread implements Runnable {
             if (mInfo.mStatus == Downloads.Impl.STATUS_CANCELED) {
                 throw new StopRequestException(Downloads.Impl.STATUS_CANCELED, "download canceled");
             }
+
+            //TODO ggg
+            if (mInfo.mDeleted) {
+                throw new StopRequestException(Downloads.Impl.STATUS_CANCELED, "download canceled");
+            }
         }
 
         // if policy has been changed, trigger connectivity check

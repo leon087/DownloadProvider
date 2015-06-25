@@ -588,7 +588,6 @@ public class DownloadManager {
         public Request setDestinationInExternalPublicDir(String dirType,
                 String subPath) {
             File file = Environment.getExternalStoragePublicDirectory(dirType);
-            LoggerFactory.getLogger("ggg setDestinationInExternalPublicDir").info("ggg setDestination path = " + file.getAbsolutePath());
             if (file == null) {
                 throw new IllegalStateException(
                         "Failed to get external storage public directory");
@@ -610,7 +609,6 @@ public class DownloadManager {
 
         public Request setDestinationInExternalPublicDir(File file,
                 String subPath) {
-            LoggerFactory.getLogger("ggg setDestinationInExternalPublicDir").info("ggg setDestination path = " + file.getAbsolutePath());
             if (file == null) {
                 throw new IllegalStateException(
                         "Failed to get external storage public directory");

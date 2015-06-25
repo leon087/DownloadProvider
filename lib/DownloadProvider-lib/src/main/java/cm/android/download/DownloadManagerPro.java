@@ -1,5 +1,8 @@
 package cm.android.download;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -7,14 +10,10 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import cm.android.download.providers.downloads.DownloadReceiver;
-import cm.android.download.providers.downloads.DownloadService;
+import cm.android.download.provider.Downloads;
 import cm.android.sdk.content.BaseBroadcastReceiver;
 import cm.java.util.ObjectUtil;
 
@@ -30,8 +29,6 @@ public class DownloadManagerPro {
 
     private final AtomicBoolean isInitAtomic = new AtomicBoolean(false);
 
-    private DownloadReceiver downloadReceiver = new DownloadReceiver();
-
     public void init(Context context) {
         if (!isInitAtomic.compareAndSet(false, true)) {
             return;
@@ -41,9 +38,7 @@ public class DownloadManagerPro {
         downloadManager = new DownloadManager(context.getContentResolver(),
                 context.getPackageName());
         downloadManager.setAccessAllDownloads(false);
-        startDownloadService(this.context);
         myDownloadReceiver.register(this.context);
-        downloadReceiver.register(this.context);
     }
 
     public void deInit() {
@@ -52,23 +47,9 @@ public class DownloadManagerPro {
         }
 
         clearListener();
-        downloadReceiver.unregister();
-        stopDownloadService(context);
         myDownloadReceiver.unregister();
         context = null;
         downloadManager = null;
-    }
-
-    private void startDownloadService(Context context) {
-        Intent intent = new Intent();
-        intent.setClass(context, DownloadService.class);
-        context.startService(intent);
-    }
-
-    private void stopDownloadService(Context context) {
-        Intent intent = new Intent();
-        intent.setClass(context, DownloadService.class);
-        context.stopService(intent);
     }
 
     public DownloadManager.Request getDefaultRequest(String url) {
@@ -83,7 +64,6 @@ public class DownloadManagerPro {
         // 对于下载，考虑到流量费用，这里是否允许使用漫游。
         request.setAllowedOverRoaming(true);
         request.setAllowedOverMetered(true);
-        request.setShowRunningNotification(true); // 是否显示下载进度的提示
         // request.setTitle("Downloading"); //设置notification的标题
         // 设置一个描述信息，主要是最终显示的notification提示，可以随便写个自己区别
         // request.setDescription("Downloading");
@@ -94,6 +74,7 @@ public class DownloadManagerPro {
         // 设置目标存储在外部目录，一般位置可以用 getExternalFilesDir()方法获取。
         request.setDestinationInExternalFilesDir(context,
                 Environment.DIRECTORY_DOWNLOADS, "/");
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
 
         // String filename = url.substring(url.lastIndexOf("/") + 1);
         // filename =path.getPath() + "/" + filename;
@@ -107,8 +88,7 @@ public class DownloadManagerPro {
 
         // 设置mime类型，这里看服务器配置，一般国家化的都为utf-8编码。
         // request.setMimeType(String mimeType)
-
-        request.setVisibleInDownloadsUi(true); // 设置下载管理类在处理过程中的界面是否显示
+//        request.setVisibleInDownloadsUi(true); // 设置下载管理类在处理过程中的界面是否显示
         return request;
     }
 
@@ -192,7 +172,7 @@ public class DownloadManagerPro {
                     DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             DownloadManager.Query myDownloadQuery = query(reference);
             Cursor cursor = query(myDownloadQuery);
-            if (cursor.moveToFirst()) {
+            if (cursor != null && cursor.moveToFirst()) {
                 int mStatusColumnId = cursor
                         .getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS);
 
@@ -211,6 +191,8 @@ public class DownloadManagerPro {
                 // .getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
                 // String fileUri = cursor.getString(fileUriIdx);
                 // 判断下载成功/失败
+            } else {
+                listener.onDownloadFailure(myDownloadQuery);
             }
             cursor.close();
         }

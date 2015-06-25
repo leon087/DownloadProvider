@@ -270,4 +270,5 @@
         </item>
     </plurals>
 
+    <string name="download_failed">下载失败 : %1$d</string>
 </resources>
