@@ -9,5 +9,4 @@ build
 .gradle
 .DS_Store
 *.iml
-
 local.properties

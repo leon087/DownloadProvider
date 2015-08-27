@@ -3,6 +3,11 @@ apply from: "$rootDir/ext-android.gradle"
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    //log
+    compile 'com.github.tony19:logback-android-classic:1.1.1-4'
+    compile 'com.github.tony19:logback-android-core:1.1.1-4'
+    compile 'org.slf4j:slf4j-api:1.7.12'
+    
     androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.1'
     compile 'com.android.support:support-v13:21.+'
 }

@@ -200,7 +200,7 @@ public class DownloadService extends Service {
     @Override
     public void onDestroy() {
         //TODO ggg
-        downloadReceiver.unregister();
+        downloadReceiver.unregister(this);
 
         getContentResolver().unregisterContentObserver(mObserver);
         mScanner.shutdown();

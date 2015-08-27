@@ -162,8 +162,7 @@ public class Constants {
      * Each subsequent retry grows exponentially, doubling each time.
      * The time is in seconds.
      */
-    public static final int RETRY_FIRST_DELAY = 3;
-//    public static final int RETRY_FIRST_DELAY = 30;
+    public static final int RETRY_FIRST_DELAY = 30;
 
     /** Enable separate connectivity logging */
     static final boolean LOGX = false;
@@ -177,4 +176,6 @@ public class Constants {
     private static final boolean LOCAL_LOGVV = false;
 
     public static final boolean LOGVV = LOCAL_LOGVV && LOGV;
+
+    public static final String FILE_EXISTS = "fileExists";
 }

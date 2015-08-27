@@ -47,7 +47,7 @@ public class DownloadManagerPro {
         }
 
         clearListener();
-        myDownloadReceiver.unregister();
+        myDownloadReceiver.unregister(context);
         context = null;
         downloadManager = null;
     }
@@ -171,30 +171,32 @@ public class DownloadManagerPro {
             long reference = intent.getLongExtra(
                     DownloadManager.EXTRA_DOWNLOAD_ID, -1);
             DownloadManager.Query myDownloadQuery = query(reference);
+
+            int status = -1;
             Cursor cursor = query(myDownloadQuery);
-            if (cursor != null && cursor.moveToFirst()) {
-                int mStatusColumnId = cursor
-                        .getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS);
+            try {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int mStatusColumnId = cursor
+                            .getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS);
 
-                int status = cursor.getInt(mStatusColumnId);
-                logger.info("status = " + status);
-                if (status == DownloadManager.STATUS_SUCCESSFUL) {
-                    listener.onDownloadSuccess(myDownloadQuery);
-                } else if (status == DownloadManager.STATUS_FAILED) {
-                    listener.onDownloadFailure(myDownloadQuery);
+                    status = cursor.getInt(mStatusColumnId);
                 } else {
-
+                    logger.error("cursor = {}", cursor);
                 }
-                // int fileNameIdx = myDownload
-                // .getColumnIndex(DownloadManager.COLUMN_LOCAL_FILENAME);
-                // int fileUriIdx = cursor
-                // .getColumnIndex(DownloadManager.COLUMN_LOCAL_URI);
-                // String fileUri = cursor.getString(fileUriIdx);
-                // 判断下载成功/失败
-            } else {
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
+
+            logger.info("status = " + status);
+            if (status == DownloadManager.STATUS_SUCCESSFUL) {
+//                    Toast.makeText(context, "下载成功", Toast.LENGTH_SHORT).show();
+                listener.onDownloadSuccess(myDownloadQuery);
+            } else if (status == DownloadManager.STATUS_FAILED) {
+//                    Toast.makeText(context, "下载失败", Toast.LENGTH_SHORT).show();
                 listener.onDownloadFailure(myDownloadQuery);
             }
-            cursor.close();
         }
 
         @Override

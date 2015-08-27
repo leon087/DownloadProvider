@@ -336,7 +336,12 @@ public class DownloadThread implements Runnable {
                 conn.setReadTimeout(DEFAULT_TIMEOUT);
 
                 addRequestHeaders(state, conn);
-
+                //TODO CMCC 标识文件是否存在 0 不存在
+                int code = conn.getHeaderFieldInt(Constants.FILE_EXISTS, 1);
+                if (code == 0) {
+                    StopRequestException.throwUnhandledHttpError(
+                            HTTP_NOT_FOUND, conn.getResponseMessage());
+                }
                 final int responseCode = conn.getResponseCode();
                 switch (responseCode) {
                     case HTTP_OK:
@@ -728,7 +733,10 @@ public class DownloadThread implements Runnable {
         if (state.mMimeType != null) {
             values.put(Downloads.Impl.COLUMN_MIME_TYPE, state.mMimeType);
         }
-        values.put(Downloads.Impl.COLUMN_TOTAL_BYTES, mInfo.mTotalBytes);
+
+        //TODO CMCC 为啥不用state.mTotalBytes?
+//        values.put(Downloads.Impl.COLUMN_TOTAL_BYTES, mInfo.mTotalBytes);
+        values.put(Downloads.Impl.COLUMN_TOTAL_BYTES, state.mTotalBytes);
         mContext.getContentResolver().update(mInfo.getAllDownloadsUri(), values, null, null);
     }
 
