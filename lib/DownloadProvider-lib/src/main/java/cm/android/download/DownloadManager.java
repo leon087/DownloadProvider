@@ -353,6 +353,7 @@ public class DownloadManager {
             Downloads.Impl.COLUMN_CURRENT_BYTES + " AS "
                     + COLUMN_BYTES_DOWNLOADED_SO_FAR,
             Downloads.Impl.COLUMN_ALLOW_WRITE,
+            Downloads.Impl.COLUMN_LAST_MODIFICATION,
             /*
              * add the following 'computed' columns to the cursor. they are not
 			 * 'returned' by the database, but their inclusion eliminates need

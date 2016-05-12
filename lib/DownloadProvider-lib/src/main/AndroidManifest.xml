@@ -5,6 +5,8 @@
           android:versionName="1.0">
 
     <!-- Allows access to the Download Manager -->
+    <!--静态权限-->
+
     <permission
             android:name="cm.android.permission.ACCESS_DOWNLOAD_MANAGER"
             android:description="@string/permdesc_downloadManager"
@@ -58,18 +60,20 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="cm.android.permission.ACCESS_ALL_DOWNLOADS"/>
     <!-- <uses-permission android:name="android.permission.UPDATE_DEVICE_STATS" /> -->
     <!-- TODO: replace with READ_NETWORK_POLICY permission when it exists -->
     <uses-permission android:name="android.permission.CONNECTIVITY_INTERNAL"/>
     <uses-permission android:name="android.permission.MODIFY_NETWORK_ACCOUNTING"/>
 
+    <!--动态权限-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
     <!-- <uses-sdk -->
     <!-- android:minSdkVersion="15" -->
     <!-- android:targetSdkVersion="15" /> -->
 
-    <application android:label="@string/app_label">
+    <application>
         <provider
                 android:name="cm.android.download.providers.downloads.DownloadProvider"
                 android:authorities="cm.android.downloads">
@@ -116,7 +120,9 @@
         <activity
                 android:name="cm.android.download.providers.downloads.SizeLimitActivity"
                 android:launchMode="singleTask"
-                android:theme="@style/Theme.Translucent"/>
+                android:exported="false"
+                android:theme="@style/Theme.Translucent"
+                android:excludeFromRecents="true"/>
     </application>
 
 </manifest>

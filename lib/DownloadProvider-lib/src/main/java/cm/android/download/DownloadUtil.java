@@ -9,6 +9,7 @@ import java.io.File;
 
 import cm.android.download.provider.Downloads;
 import cm.java.util.Assertions;
+import cm.java.util.IoUtil;
 
 public class DownloadUtil {
 
@@ -35,16 +36,23 @@ public class DownloadUtil {
         ContentResolver resolver = context.getApplicationContext().getContentResolver();
         String selection = Downloads.Impl._ID + " = ? ";
         String[] selectionArgs = new String[]{String.valueOf(downloadId)};
-        Cursor cursor = resolver.query(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI,
-                null, selection, selectionArgs, null);
-        if (cursor != null && cursor.moveToFirst()) {
-            int columnIndex = cursor.getColumnIndexOrThrow(Downloads.Impl.COLUMN_STATUS);
-            int errorCode = cursor.getInt(columnIndex);
-            String errorMsg = cursor
-                    .getString(cursor.getColumnIndexOrThrow(Downloads.Impl.COLUMN_ERROR_MSG));
-            Toast.makeText(context,
-                    context.getString(R.string.download_failed, errorCode),
-                    Toast.LENGTH_SHORT).show();
+
+        Cursor cursor = null;
+        try {
+            cursor = resolver.query(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI,
+                    null, selection, selectionArgs, null);
+            if (cursor != null && cursor.moveToFirst()) {
+                int columnIndex = cursor.getColumnIndexOrThrow(Downloads.Impl.COLUMN_STATUS);
+                int errorCode = cursor.getInt(columnIndex);
+                String errorMsg = cursor
+                        .getString(cursor.getColumnIndexOrThrow(Downloads.Impl.COLUMN_ERROR_MSG));
+                Toast.makeText(context,
+                        context.getString(R.string.download_failed, errorCode),
+                        Toast.LENGTH_SHORT).show();
+            }
+        } finally {
+            IoUtil.closeQuietly(cursor);
         }
+
     }
 }

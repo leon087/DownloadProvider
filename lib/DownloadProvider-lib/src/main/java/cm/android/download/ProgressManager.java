@@ -17,8 +17,6 @@ public class ProgressManager {
 
     private Context mContext;
 
-    private DownloadManager mDownloadManager;
-
     private DownloadManagerContentObserver mObserver;
 
     private HandlerThread mUpdateThread;
@@ -45,17 +43,15 @@ public class ProgressManager {
 
     private static final int MSG_UPDATE = 1;
 
-    public ProgressManager(Context context, DownloadCallback callback) {
-        mContext = context;
-        mDownloadManager = new DownloadManager(context.getContentResolver(),
-                context.getPackageName());
-        this.downloadCallback = callback;
+    public ProgressManager() {
     }
 
-    public void init() {
+    public void init(Context context, DownloadCallback callback) {
+        mContext = context.getApplicationContext();
+        this.downloadCallback = callback;
+
         mObserver = new DownloadManagerContentObserver();
-        mContext.getContentResolver()
-                .registerContentObserver(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI, true, mObserver);
+        mContext.getContentResolver().registerContentObserver(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI, true, mObserver);
 
         mUpdateThread = new HandlerThread("MyDownloadManager");
         mUpdateThread.start();
@@ -63,9 +59,10 @@ public class ProgressManager {
     }
 
     public void deInit() {
+        mUpdateThread.quit();
         mContext.getContentResolver().unregisterContentObserver(mObserver);
         mObserver = null;
-        mUpdateThread.quit();
+        mContext = null;
     }
 
     private class DownloadManagerContentObserver extends ContentObserver {
@@ -87,30 +84,6 @@ public class ProgressManager {
 
     private void update() {
         downloadCallback.onChange();
-        /*
-        mDownloads.clear();
-        String selection = Downloads.Impl.COLUMN_STATUS + " != ? ";
-        String[] selectionArgs = new String[]{String.valueOf(Downloads.Impl.STATUS_SUCCESS)};
-        final ContentResolver resolver = mContext.getContentResolver();
-        final Cursor cursor = resolver.query(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI,
-                null, selection, selectionArgs, null);
-        try {
-            DownloadInfo.Reader reader = new DownloadInfo.Reader(resolver, cursor);
-            final int idColumn = cursor.getColumnIndexOrThrow(Downloads.Impl._ID);
-            while (cursor.moveToNext()) {
-                long id = cursor.getLong(idColumn);
-                DownloadInfo info = mDownloads.get(id);
-                if (info != null) {
-                    updateDownload(reader, info);
-                } else {
-                    insertDownloadLocked(reader);
-                }
-            }
-            downloadCallback.reportProgress(mDownloads.values());
-        } finally {
-            cursor.close();
-        }
-        */
     }
 
     public interface DownloadCallback {

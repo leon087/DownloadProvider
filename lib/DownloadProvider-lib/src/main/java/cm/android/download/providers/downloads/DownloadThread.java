@@ -16,6 +16,9 @@
 
 package cm.android.download.providers.downloads;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.drm.DrmManagerClient;
@@ -41,6 +44,7 @@ import java.net.URLConnection;
 
 import cm.android.download.provider.Downloads;
 import cm.android.download.providers.downloads.DownloadInfo.NetworkState;
+import cm.java.util.IoUtil;
 
 import static android.text.format.DateUtils.SECOND_IN_MILLIS;
 import static cm.android.download.provider.Downloads.Impl.STATUS_BAD_REQUEST;
@@ -54,6 +58,7 @@ import static cm.android.download.providers.downloads.Constants.TAG;
 import static java.net.HttpURLConnection.HTTP_INTERNAL_ERROR;
 import static java.net.HttpURLConnection.HTTP_MOVED_PERM;
 import static java.net.HttpURLConnection.HTTP_MOVED_TEMP;
+import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.net.HttpURLConnection.HTTP_PARTIAL;
 import static java.net.HttpURLConnection.HTTP_SEE_OTHER;
@@ -75,6 +80,8 @@ public class DownloadThread implements Runnable {
     // TODO: bind each download to a specific network interface to avoid state
     // checking races once we have ConnectivityManager API
 
+    private static Logger mLogger = LoggerFactory.getLogger("DownloadThread");
+
     private static final int HTTP_REQUESTED_RANGE_NOT_SATISFIABLE = 416;
 
     private static final int HTTP_TEMP_REDIRECT = 307;
@@ -93,8 +100,7 @@ public class DownloadThread implements Runnable {
 
     private volatile boolean mPolicyDirty;
 
-    public DownloadThread(Context context, SystemFacade systemFacade, DownloadInfo info,
-            StorageManager storageManager, DownloadNotifier notifier) {
+    public DownloadThread(Context context, SystemFacade systemFacade, DownloadInfo info, StorageManager storageManager, DownloadNotifier notifier) {
         mContext = context;
         mSystemFacade = systemFacade;
         mInfo = info;
@@ -242,7 +248,6 @@ public class DownloadThread implements Runnable {
             }
 
             executeDownload(state);
-
             finalizeDestinationFile(state);
             finalStatus = Downloads.Impl.STATUS_SUCCESS;
         } catch (StopRequestException error) {
@@ -293,6 +298,7 @@ public class DownloadThread implements Runnable {
             TrafficStats.clearThreadStatsTag();
 //            TrafficStats.clearThreadStatsUid(); // TODO
 
+//            processDownloadComplete(state, finalStatus);
             cleanupDestination(state, finalStatus);
             notifyDownloadCompleted(state, finalStatus, errorMsg, numFailed);
 
@@ -339,15 +345,15 @@ public class DownloadThread implements Runnable {
                 //TODO CMCC 标识文件是否存在 0 不存在
                 int code = conn.getHeaderFieldInt(Constants.FILE_EXISTS, 1);
                 if (code == 0) {
-                    StopRequestException.throwUnhandledHttpError(
-                            HTTP_NOT_FOUND, conn.getResponseMessage());
+                    StopRequestException.throwUnhandledHttpError(HTTP_NOT_FOUND, conn.getResponseMessage());
                 }
                 final int responseCode = conn.getResponseCode();
+                //TODO CMCC
+                mLogger.info("responseCode = " + responseCode);
                 switch (responseCode) {
                     case HTTP_OK:
                         if (state.mContinuingDownload) {
-                            throw new StopRequestException(
-                                    STATUS_CANNOT_RESUME, "Expected partial, but received OK");
+                            throw new StopRequestException(STATUS_CANNOT_RESUME, "Expected partial, but received OK");
                         }
                         processResponseHeaders(state, conn);
                         transferData(state, conn);
@@ -355,8 +361,7 @@ public class DownloadThread implements Runnable {
 
                     case HTTP_PARTIAL:
                         if (!state.mContinuingDownload) {
-                            throw new StopRequestException(
-                                    STATUS_CANNOT_RESUME, "Expected OK, but received partial");
+                            throw new StopRequestException(STATUS_CANNOT_RESUME, "Expected OK, but received partial");
                         }
                         transferData(state, conn);
                         return;
@@ -374,21 +379,17 @@ public class DownloadThread implements Runnable {
                         continue;
 
                     case HTTP_REQUESTED_RANGE_NOT_SATISFIABLE:
-                        throw new StopRequestException(
-                                STATUS_CANNOT_RESUME, "Requested range not satisfiable");
+                        throw new StopRequestException(STATUS_CANNOT_RESUME, "Requested range not satisfiable");
 
                     case HTTP_UNAVAILABLE:
                         parseRetryAfterHeaders(state, conn);
-                        throw new StopRequestException(
-                                HTTP_UNAVAILABLE, conn.getResponseMessage());
+                        throw new StopRequestException(HTTP_UNAVAILABLE, conn.getResponseMessage());
 
                     case HTTP_INTERNAL_ERROR:
-                        throw new StopRequestException(
-                                HTTP_INTERNAL_ERROR, conn.getResponseMessage());
+                        throw new StopRequestException(HTTP_INTERNAL_ERROR, conn.getResponseMessage());
 
                     default:
-                        StopRequestException.throwUnhandledHttpError(
-                                responseCode, conn.getResponseMessage());
+                        StopRequestException.throwUnhandledHttpError(responseCode, conn.getResponseMessage());
                 }
             } catch (IOException e) {
                 // Trouble with low-level sockets
@@ -419,17 +420,18 @@ public class DownloadThread implements Runnable {
                 throw new StopRequestException(STATUS_HTTP_DATA_ERROR, e);
             }
 
+            //TODO ggg 加解密
             try {
-//                if (DownloadDrmHelper.isDrmConvertNeeded(state.mMimeType)) {
-//                    drmClient = new DrmManagerClient(mContext);
-//                    final RandomAccessFile file = new RandomAccessFile(
-//                            new File(state.mFilename), "rw");
-////                    out = new DrmOutputStream(drmClient, file, state.mMimeType); // TODO
-//                    outFd = file.getFD();
-//                } else {
+                //                if (DownloadDrmHelper.isDrmConvertNeeded(state.mMimeType)) {
+                //                    drmClient = new DrmManagerClient(mContext);
+                //                    final RandomAccessFile file = new RandomAccessFile(
+                //                            new File(state.mFilename), "rw");
+                ////                    out = new DrmOutputStream(drmClient, file, state.mMimeType); // TODO
+                //                    outFd = file.getFD();
+                //                } else {
                 out = new FileOutputStream(state.mFilename, true);
                 outFd = ((FileOutputStream) out).getFD();
-//                }
+                //                }
             } catch (IOException e) {
                 throw new StopRequestException(STATUS_FILE_ERROR, e);
             }
@@ -451,7 +453,7 @@ public class DownloadThread implements Runnable {
 //                drmClient.release(); // TODO
             }
 
-//            IoUtils.closeQuietly(in);
+            IoUtil.closeQuietly(in);
 
             try {
                 if (out != null) {
@@ -462,7 +464,7 @@ public class DownloadThread implements Runnable {
                 }
             } catch (IOException e) {
             } finally {
-//                IoUtils.closeQuietly(out); // TODO
+                IoUtil.closeQuietly(out);
             }
         }
     }
@@ -494,6 +496,7 @@ public class DownloadThread implements Runnable {
      */
     private void transferData(State state, InputStream in, OutputStream out)
             throws StopRequestException {
+
         final byte data[] = new byte[Constants.BUFFER_SIZE];
         for (; ; ) {
             int bytesRead = readFromResponse(state, data, in);
@@ -508,8 +511,7 @@ public class DownloadThread implements Runnable {
             reportProgress(state);
 
             if (Constants.LOGVV) {
-                Log.v(Constants.TAG, "downloaded " + state.mCurrentBytes + " for "
-                        + mInfo.mUri);
+                Log.v(Constants.TAG, "downloaded " + state.mCurrentBytes + " for " + mInfo.mUri);
             }
 
             checkPausedOrCanceled(state);
@@ -537,6 +539,7 @@ public class DownloadThread implements Runnable {
             if (Constants.LOGVV) {
                 Log.d(TAG, "cleanupDestination() deleting " + state.mFilename);
             }
+
             new File(state.mFilename).delete();
             state.mFilename = null;
         }
@@ -646,8 +649,7 @@ public class DownloadThread implements Runnable {
         }
         mContext.getContentResolver().update(mInfo.getAllDownloadsUri(), values, null, null);
 
-        final boolean lengthMismatched = (state.mContentLength != -1)
-                && (state.mCurrentBytes != state.mContentLength);
+        final boolean lengthMismatched = (state.mContentLength != -1) && (state.mCurrentBytes != state.mContentLength);
         if (lengthMismatched) {
             if (cannotResume(state)) {
                 throw new StopRequestException(STATUS_CANNOT_RESUME,
@@ -685,11 +687,9 @@ public class DownloadThread implements Runnable {
             values.put(Downloads.Impl.COLUMN_CURRENT_BYTES, state.mCurrentBytes);
             mContext.getContentResolver().update(mInfo.getAllDownloadsUri(), values, null, null);
             if (cannotResume(state)) {
-                throw new StopRequestException(STATUS_CANNOT_RESUME,
-                        "Failed reading response: " + ex + "; unable to resume", ex);
+                throw new StopRequestException(STATUS_CANNOT_RESUME, "Failed reading response: " + ex + "; unable to resume", ex);
             } else {
-                throw new StopRequestException(STATUS_HTTP_DATA_ERROR,
-                        "Failed reading response: " + ex, ex);
+                throw new StopRequestException(STATUS_HTTP_DATA_ERROR, "Failed reading response: " + ex, ex);
             }
         }
     }
@@ -734,7 +734,8 @@ public class DownloadThread implements Runnable {
             values.put(Downloads.Impl.COLUMN_MIME_TYPE, state.mMimeType);
         }
 
-        //TODO CMCC 为啥不用state.mTotalBytes?
+        mLogger.info("updateDatabaseFromHeaders state = {}, totalSize ={} ", state.toString(),
+                mInfo.mTotalBytes);
 //        values.put(Downloads.Impl.COLUMN_TOTAL_BYTES, mInfo.mTotalBytes);
         values.put(Downloads.Impl.COLUMN_TOTAL_BYTES, state.mTotalBytes);
         mContext.getContentResolver().update(mInfo.getAllDownloadsUri(), values, null, null);
@@ -755,6 +756,7 @@ public class DownloadThread implements Runnable {
         state.mHeaderETag = conn.getHeaderField("ETag");
 
         final String transferEncoding = conn.getHeaderField("Transfer-Encoding");
+        mLogger.info("transferEncoding = " + transferEncoding);
         if (transferEncoding == null) {
             state.mContentLength = getHeaderFieldLong(conn, "Content-Length", -1);
         } else {
@@ -763,6 +765,7 @@ public class DownloadThread implements Runnable {
         }
 
         state.mTotalBytes = state.mContentLength;
+
         mInfo.mTotalBytes = state.mContentLength;
 
         final boolean noSizeInfo = state.mContentLength == -1
@@ -793,14 +796,12 @@ public class DownloadThread implements Runnable {
      * appropriately for resumption.
      */
     private void setupDestinationFile(State state) throws StopRequestException {
-        if (!TextUtils.isEmpty(
-                state.mFilename)) { // only true if we've already run a thread for this download
+        if (!TextUtils.isEmpty(state.mFilename)) { // only true if we've already run a thread for this download
             if (Constants.LOGV) {
                 Log.i(Constants.TAG, "have run thread before for id: " + mInfo.mId +
                         ", and state.mFilename: " + state.mFilename);
             }
-            if (!Helpers.isFilenameValid(state.mFilename,
-                    mStorageManager.getDownloadDataDirectory())) {
+            if (!Helpers.isFilenameValid(state.mFilename, mStorageManager.getDownloadDataDirectory())) {
                 // this should never happen
                 throw new StopRequestException(Downloads.Impl.STATUS_FILE_ERROR,
                         "found invalid internal destination filename");
@@ -957,4 +958,5 @@ public class DownloadThread implements Runnable {
                 return false;
         }
     }
+
 }

@@ -260,7 +260,7 @@ public class DownloadReceiver extends BaseBroadcastReceiver {
     public IntentFilter createIntentFilter() {
         IntentFilter filter = new IntentFilter();
 //        filter.addAction("android.intent.action.BOOT_COMPLETED");
-        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+//        filter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
         //
         filter.addAction("android.intent.action.MEDIA_MOUNTED");
 //        filter.addDataScheme("file");

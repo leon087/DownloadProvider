@@ -13,7 +13,6 @@ import android.os.Environment;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import cm.android.download.provider.Downloads;
 import cm.android.sdk.content.BaseBroadcastReceiver;
 import cm.java.util.ObjectUtil;
 
