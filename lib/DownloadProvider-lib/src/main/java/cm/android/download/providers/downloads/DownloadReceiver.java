@@ -37,7 +37,7 @@ import android.widget.Toast;
 import cm.android.download.DownloadManager;
 import cm.android.download.R;
 import cm.android.download.provider.Downloads;
-import cm.android.sdk.content.BaseBroadcastReceiver;
+import cm.android.download.util.BaseBroadcastReceiver;
 
 import static cm.android.download.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED;
 import static cm.android.download.DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION;

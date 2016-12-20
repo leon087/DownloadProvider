@@ -27,15 +27,22 @@ import cm.android.download.DownloadManager;
 
 /**
  * The Download Manager
- *
- * @pending
  */
 public final class Downloads {
 
     /**
      * DownloadProvider authority
      */
-    public static final String AUTHORITY = DownloadConfig.AUTHORITY;
+    public static String AUTHORITY = DownloadConfig.AUTHORITIES;
+
+//    /**
+//     * setAuthority
+//     */
+//    public static void setAuthority(Context context) {
+//        ApplicationInfo appInfo = context.getApplicationInfo();
+//        String authority = appInfo.metaData.getString(DownloadConfig.KEY_AUTHORITIE);
+//        AUTHORITIES = authority;
+//    }
 
     private Downloads() {
     }
@@ -995,7 +1002,7 @@ public final class Downloads {
      * Delete all the downloads for a package/class pair.
      */
     public static final void removeAllDownloadsByPackage(Context context,
-            String notification_package, String notification_class) {
+                                                         String notification_package, String notification_class) {
         context.getContentResolver().delete(Impl.CONTENT_URI,
                 QUERY_WHERE_CLAUSE,
                 new String[]{notification_package, notification_class});

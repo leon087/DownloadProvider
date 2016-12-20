@@ -1,56 +1,62 @@
-def computeVersionName() {
-    return project.versionName + "." + project.versionCode + "." + buildTime()
-}
-
-def buildTime() {
-    def date = new Date()
-    def formattedDate = date.format('MMddHH')
-    return formattedDate
-}
-
-def isWindows() {
-    return Os.isFamily(Os.FAMILY_WINDOWS);
-
-//    String osName = System.getProperty("os.name").toLowerCase();
-//    if (osName.indexOf("windows") >= 0) {
-//        return true;
-//    }
-//    return false;
-}
-
-if (plugins.hasPlugin('com.android.application') ||
-        plugins.hasPlugin('com.android.library')) {
-    android {
-        compileSdkVersion Integer.parseInt(project.compileSdkVersion)
-        buildToolsVersion project.buildToolsVersion
-
-        compileOptions {
-            sourceCompatibility = JavaVersion.VERSION_1_7
-            targetCompatibility = JavaVersion.VERSION_1_7
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url CM_RELEASE_REPOSITORY_URL
+            credentials {
+                username CM_NEXUS_USERNAME
+                password CM_NEXUS_PASSWORD
+            }
         }
+        maven { url uri(new File(rootDir, 'local_repo')) }
+        mavenLocal()
+    }
+//    ext {
+//        cmGradleVersion = "local.local"
+//    }
 
-        defaultConfig.with {
-            minSdkVersion Integer.parseInt(project.minSdkVersion)
-            targetSdkVersion Integer.parseInt(project.targetSdkVersion)
-            versionCode = Integer.parseInt(project.versionCode)
-            versionName = computeVersionName()
+    dependencies {
+        classpath "ggg.android:cm.android.gradle:$cmGradleVersion"
+    }
+}
+
+if (plugins.hasPlugin('com.android.library')) {
+    if (project.hasProperty("version_prefix")) {
+        version = cm.android.gradle.util.Util.version(project.version_prefix, project.version_code)
+        android {
+            defaultConfig {
+                archivesBaseName += ("-" + project.version_prefix + "." + project.version_code + "." + cm.android.gradle.util.Util.buildTime())
+            }
         }
     }
+}
+
+if (plugins.hasPlugin('com.android.application') || plugins.hasPlugin('com.android.library')) {
     android {
-//        packagingOptions {
-////        pickFirst 'META-INF/foo.txt'
-//
-//            exclude 'META-INF/DEPENDENCIES.txt'
-//            exclude 'META-INF/LICENSE.txt'
-//            exclude 'META-INF/NOTICE.txt'
-//            exclude 'LICENSE.txt'
-//            exclude 'META-INF/LICENSE'
-//            exclude 'META-INF/license.txt'
-//            exclude 'META-INF/NOTICE'
-//            exclude 'META-INF/notice.txt'
-//            exclude 'META-INF/ASL2.0'
-//            exclude 'META-INF/RELEASE_NOTES.txt'
-//        }
+        compileSdkVersion rootProject.ext.compileSdkVersion
+        buildToolsVersion rootProject.ext.buildToolsVersion
+
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_7
+            targetCompatibility JavaVersion.VERSION_1_7
+        }
+
+        defaultConfig {
+            minSdkVersion rootProject.ext.minSdkVersion
+            targetSdkVersion rootProject.ext.targetSdkVersion
+        }
+    }
+
+    android {
+
+        testOptions {
+            unitTests.returnDefaultValues = true
+        }
+
+        aaptOptions {
+//            noCompress 'foo', 'bar'
+            ignoreAssetsPattern "!.svn:!.git:!.ds_store:!*.scc:.*:<dir>_*:!CVS:!thumbs.db:!picasa.ini:!*~"
+        }
 
         packagingOptions.excludes = [
                 '**/LICENSE.txt',
@@ -68,13 +74,20 @@ if (plugins.hasPlugin('com.android.application') ||
                 'META-INF/LICENSE.txt',
                 'META-INF/NOTICE',
                 'META-INF/NOTICE.txt',
+                '.readme'
         ]
 
-        lintOptions {
-            abortOnError false
-            quiet false
-            showAll true
-        }
+//        lintOptions {
+//            abortOnError false
+//            quiet false
+//            showAll true
+//            xmlReport true
+//            htmlReport true
+//            lintConfig file("${project.rootDir}/config/lint/lint.xml")
+//
+//            xmlOutput file("lint/lint-report.xml")
+//            htmlOutput file("lint/lint-report.html")
+//        }
 
         dexOptions {
             preDexLibraries = false
@@ -83,102 +96,3 @@ if (plugins.hasPlugin('com.android.application') ||
         }
     }
 }
-
-if (plugins.hasPlugin('com.android.library')) {
-    android.libraryVariants.all { variant ->
-        def name = variant.buildType.name
-        def task = project.tasks.create "jar${name.capitalize()}", Jar
-        task.dependsOn variant.javaCompile
-        task.from variant.javaCompile.destinationDir
-        artifacts.add('archives', task);
-    }
-
-    task androidSourcesJar(type: Jar) {
-        classifier = 'sources'
-        from android.sourceSets.main.java.srcDirs
-    }
-
-    artifacts {
-        archives androidSourcesJar
-    }
-}
-
-if (plugins.hasPlugin('com.android.application')) {
-    //修改apk名
-    android {
-        applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                def appName = project.appName
-                appName += "-"
-                appName += defaultConfig.versionName
-                if (variant.buildType.versionNameSuffix != null) {
-                    appName += variant.buildType.versionNameSuffix
-                }
-                appName += ".apk"
-                output.outputFile = new File(output.outputFile.parent, appName)
-            }
-        }
-    }
-}
-
-def getKeyStore(def propertyFile, def storeFile) {
-    if (propertyFile == null || storeFile == "") {
-        return 'debug'
-    }
-
-    def props = new Properties();
-    try {
-        def signingConfig = 'release';
-
-        def ins = new BufferedInputStream(new FileInputStream(propertyFile));
-        props.load(ins);
-        ins.close();
-        project.android.signingConfigs {
-            "$signingConfig" {
-                storeFile = new File(storeFile);
-                storePassword = props.getProperty('storePassword');
-                keyAlias = props.getProperty('keyAlias');
-                keyPassword = props.getProperty('keyPassword');
-//                System.out.println(props.getProperty('storeFile') + '   ');
-            }
-        }
-        return "$signingConfig";
-    } catch (Exception e) {
-        return 'debug';
-    }
-}
-
-//class Ext implements Plugin<Project> {
-//
-//    void apply(Project project) {
-//        project.android.signingConfigs.release =
-//                getKeyStore(project.propertyFile_release, project.storeFile_release);
-//    }
-//
-//    def getKeyStore(def propertyFile, def storeFile) {
-//        if (releaseStoreFile == null || releaseStoreFile == "") {
-//            return 'debug'
-//        }
-//
-//        def props = new Properties();
-//        try {
-//            def signingConfig = 'release';
-//
-//            def ins = new BufferedInputStream(new FileInputStream(releasePropertyFile));
-//            props.load(ins);
-//            ins.close();
-//            project.android.signingConfigs {
-//                "$signingConfig" {
-//                    storeFile = new File(releaseStoreFile);
-//                    storePassword = props.getProperty('storePassword');
-//                    keyAlias = props.getProperty('keyAlias');
-//                    keyPassword = props.getProperty('keyPassword');
-////                System.out.println(props.getProperty('storeFile') + '   ');
-//                }
-//            }
-//            return "$signingConfig";
-//        } catch (Exception e) {
-//            return 'debug';
-//        }
-//    }
-//}

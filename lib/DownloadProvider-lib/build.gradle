@@ -1,12 +1,15 @@
 tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
 
 apply plugin: 'com.android.library'
-//apply from: '../../ext-android.gradle'
 apply from: "$rootDir/ext-android.gradle"
-
-version = project.versionName
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':lib:MyLibrary')
+
+    compile 'com.google.guava:guava:19.0'
+
+    //log
+    compile "org.slf4j:slf4j-api:1.7.22"
+
+    compile "com.android.support:support-v13:25.0.1"
 }

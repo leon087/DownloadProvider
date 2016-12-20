@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import cm.android.download.DownloadUtil;
 import cm.android.download.provider.Downloads;
+import cm.android.download.util.Util;
 
 import static cm.android.download.providers.downloads.Constants.LOGV;
 
@@ -203,7 +203,7 @@ class StorageManager {
 
         //ggg
         if (destination == Downloads.Impl.DESTINATION_FILE_URI) {
-            DownloadUtil.checkDirectory(root);
+            Util.checkDirectory(root);
         } else if (destination == Downloads.Impl.DESTINATION_EXTERNAL) {
             if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 throw new StopRequestException(Downloads.Impl.STATUS_DEVICE_NOT_FOUND_ERROR,

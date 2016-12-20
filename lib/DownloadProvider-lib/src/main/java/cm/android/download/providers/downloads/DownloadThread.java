@@ -44,7 +44,7 @@ import java.net.URLConnection;
 
 import cm.android.download.provider.Downloads;
 import cm.android.download.providers.downloads.DownloadInfo.NetworkState;
-import cm.java.util.IoUtil;
+import cm.android.download.util.Util;
 
 import static android.text.format.DateUtils.SECOND_IN_MILLIS;
 import static cm.android.download.provider.Downloads.Impl.STATUS_BAD_REQUEST;
@@ -453,7 +453,7 @@ public class DownloadThread implements Runnable {
 //                drmClient.release(); // TODO
             }
 
-            IoUtil.closeQuietly(in);
+            Util.closeQuietly(in);
 
             try {
                 if (out != null) {
@@ -464,7 +464,7 @@ public class DownloadThread implements Runnable {
                 }
             } catch (IOException e) {
             } finally {
-                IoUtil.closeQuietly(out);
+                Util.closeQuietly(out);
             }
         }
     }

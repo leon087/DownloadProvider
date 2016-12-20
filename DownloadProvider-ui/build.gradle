@@ -1,14 +1,11 @@
 apply plugin: 'com.android.application'
-//apply from: '../../ext-android.gradle'
 apply from: "$rootDir/ext-android.gradle"
+apply plugin: 'cm.android.gradle.proguard'
 
 android {
     defaultConfig {
         applicationId project.applicationId
-    }
-
-    signingConfigs {
-        debug { storeFile file("keystore/debug.keystore") }
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -20,45 +17,26 @@ android {
 
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),
-                    new File(project(':lib:MyLibrary').getProjectDir(), 'util-proguard-rules.pro'),
-                    new File(project(':lib:MyLibrary').getProjectDir(), 'common-proguard-rules.pro'),
+                    cm.android.gradle.ExtUtil.getProguardFile(project),
                     'proguard-project.txt'
         }
 
         debug {
-            shrinkResources true
-            zipAlignEnabled true
+            shrinkResources false
+            zipAlignEnabled false
+            minifyEnabled false
 
             versionNameSuffix "-debug"
             signingConfig signingConfigs.debug
-        }
-
-        beta {
-            initWith(buildTypes.release)
-            debuggable true
-
-            versionNameSuffix "-beta"
-            signingConfig signingConfigs.debug
-        }
-    }
-
-    applicationVariants.all { variant ->
-        variant.outputs.each { output ->
-            def appName = project.appName
-            appName += "-"
-            appName += defaultConfig.versionName
-            if (variant.buildType.versionNameSuffix != null) {
-                appName += variant.buildType.versionNameSuffix
-            }
-            appName += ".apk"
-            output.outputFile = new File(output.outputFile.parent, appName)
         }
     }
 }
 
 dependencies {
-    //android.jar
-    //compile files("${android.sdk}/platforms/${android.target}/android.jar")
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':lib:DownloadProvider-lib')
+
+//    compile(['ggg.android:cm.android.log:1.6@jar',
+//             'com.jakewharton.timber:timber:4.4.0'])
 }
+

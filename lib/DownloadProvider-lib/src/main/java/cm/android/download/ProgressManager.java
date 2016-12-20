@@ -1,14 +1,12 @@
 package cm.android.download;
 
-
-import com.google.common.collect.Sets;
-
 import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import cm.android.download.provider.Downloads;
@@ -25,7 +23,7 @@ public class ProgressManager {
 
     private DownloadCallback downloadCallback;
 
-    private final Set<Long> mSet = Sets.newHashSet();
+    private final Set<Long> mSet = new HashSet<>();
 
     private Handler.Callback mUpdateCallback = new Handler.Callback() {
         @Override

@@ -376,8 +376,7 @@ public final class DownloadProvider extends ContentProvider {
             fillNullValuesForColumn(db, values);
         }
 
-        private void fillNullValuesForColumn(SQLiteDatabase db,
-                ContentValues values) {
+        private void fillNullValuesForColumn(SQLiteDatabase db, ContentValues values) {
             String column = values.valueSet().iterator().next().getKey();
             db.update(DB_TABLE, values, column + " is null", null);
             values.clear();
@@ -402,8 +401,7 @@ public final class DownloadProvider extends ContentProvider {
          * @param columnName       name of the column to add
          * @param columnDefinition SQL for the column definition
          */
-        private void addColumn(SQLiteDatabase db, String dbTable,
-                String columnName, String columnDefinition) {
+        private void addColumn(SQLiteDatabase db, String dbTable, String columnName, String columnDefinition) {
             db.execSQL("ALTER TABLE " + dbTable + " ADD COLUMN " + columnName
                     + " " + columnDefinition);
         }
@@ -454,8 +452,7 @@ public final class DownloadProvider extends ContentProvider {
         }
 
         private void createHeadersTable(SQLiteDatabase db) {
-            db.execSQL("DROP TABLE IF EXISTS "
-                    + Downloads.Impl.RequestHeaders.HEADERS_DB_TABLE);
+            db.execSQL("DROP TABLE IF EXISTS " + Downloads.Impl.RequestHeaders.HEADERS_DB_TABLE);
             db.execSQL("CREATE TABLE "
                     + Downloads.Impl.RequestHeaders.HEADERS_DB_TABLE + "("
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -770,11 +767,9 @@ public final class DownloadProvider extends ContentProvider {
      * Check that the file URI provided for DESTINATION_FILE_URI is valid.
      */
     private void checkFileUriDestination(ContentValues values) {
-        String fileUri = values
-                .getAsString(Downloads.Impl.COLUMN_FILE_NAME_HINT);
+        String fileUri = values.getAsString(Downloads.Impl.COLUMN_FILE_NAME_HINT);
         if (fileUri == null) {
-            throw new IllegalArgumentException(
-                    "DESTINATION_FILE_URI must include a file URI under COLUMN_FILE_NAME_HINT");
+            throw new IllegalArgumentException("DESTINATION_FILE_URI must include a file URI under COLUMN_FILE_NAME_HINT");
         }
         Uri uri = Uri.parse(fileUri);
         String scheme = uri.getScheme();
@@ -898,8 +893,7 @@ public final class DownloadProvider extends ContentProvider {
      * Remove column from values, and throw a SecurityException if the value
      * isn't within the specified allowedValues.
      */
-    private void enforceAllowedValues(ContentValues values, String column,
-            Object... allowedValues) {
+    private void enforceAllowedValues(ContentValues values, String column, Object... allowedValues) {
         Object value = values.get(column);
         values.remove(column);
         for (Object allowedValue : allowedValues) {
@@ -919,8 +913,8 @@ public final class DownloadProvider extends ContentProvider {
      */
     @Override
     public Cursor query(final Uri uri, String[] projection,
-            final String selection, final String[] selectionArgs,
-            final String sort) {
+                        final String selection, final String[] selectionArgs,
+                        final String sort) {
 
         Helpers.validateSelection(selection, sAppReadableColumnsSet);
 
@@ -993,8 +987,8 @@ public final class DownloadProvider extends ContentProvider {
     }
 
     private void logVerboseQueryInfo(String[] projection,
-            final String selection, final String[] selectionArgs,
-            final String sort, SQLiteDatabase db) {
+                                     final String selection, final String[] selectionArgs,
+                                     final String sort, SQLiteDatabase db) {
         StringBuilder sb = new StringBuilder();
         sb.append("starting query, database is ");
         if (db != null) {
@@ -1043,8 +1037,7 @@ public final class DownloadProvider extends ContentProvider {
     /**
      * Insert request headers for a download into the DB.
      */
-    private void insertRequestHeaders(SQLiteDatabase db, long downloadId,
-            ContentValues values) {
+    private void insertRequestHeaders(SQLiteDatabase db, long downloadId, ContentValues values) {
         ContentValues rowValues = new ContentValues();
         rowValues.put(Downloads.Impl.RequestHeaders.COLUMN_DOWNLOAD_ID,
                 downloadId);
@@ -1083,8 +1076,7 @@ public final class DownloadProvider extends ContentProvider {
     /**
      * Delete request headers for downloads matching the given query.
      */
-    private void deleteRequestHeaders(SQLiteDatabase db, String where,
-            String[] whereArgs) {
+    private void deleteRequestHeaders(SQLiteDatabase db, String where, String[] whereArgs) {
         String[] projection = new String[]{Downloads.Impl._ID};
         Cursor cursor = db.query(DB_TABLE, projection, where, whereArgs, null,
                 null, null, null);
@@ -1116,7 +1108,7 @@ public final class DownloadProvider extends ContentProvider {
      */
     @Override
     public int update(final Uri uri, final ContentValues values,
-            final String where, final String[] whereArgs) {
+                      final String where, final String[] whereArgs) {
 
         Helpers.validateSelection(where, sAppReadableColumnsSet);
 
@@ -1225,7 +1217,7 @@ public final class DownloadProvider extends ContentProvider {
     }
 
     private SqlSelection getWhereClause(final Uri uri, final String where,
-            final String[] whereArgs, int uriMatch) {
+                                        final String[] whereArgs, int uriMatch) {
         SqlSelection selection = new SqlSelection();
         selection.appendClause(where, whereArgs);
         if (uriMatch == MY_DOWNLOADS_ID || uriMatch == ALL_DOWNLOADS_ID
@@ -1247,9 +1239,7 @@ public final class DownloadProvider extends ContentProvider {
      * Deletes a row in the database
      */
     @Override
-    public int delete(final Uri uri, final String where,
-            final String[] whereArgs) {
-
+    public int delete(final Uri uri, final String where, final String[] whereArgs) {
         Helpers.validateSelection(where, sAppReadableColumnsSet);
 
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -1403,32 +1393,28 @@ public final class DownloadProvider extends ContentProvider {
         }
     }
 
-    private static final void copyInteger(String key, ContentValues from,
-            ContentValues to) {
+    private static final void copyInteger(String key, ContentValues from, ContentValues to) {
         Integer i = from.getAsInteger(key);
         if (i != null) {
             to.put(key, i);
         }
     }
 
-    private static final void copyBoolean(String key, ContentValues from,
-            ContentValues to) {
+    private static final void copyBoolean(String key, ContentValues from, ContentValues to) {
         Boolean b = from.getAsBoolean(key);
         if (b != null) {
             to.put(key, b);
         }
     }
 
-    private static final void copyString(String key, ContentValues from,
-            ContentValues to) {
+    private static final void copyString(String key, ContentValues from, ContentValues to) {
         String s = from.getAsString(key);
         if (s != null) {
             to.put(key, s);
         }
     }
 
-    private static final void copyStringWithDefault(String key,
-            ContentValues from, ContentValues to, String defaultValue) {
+    private static final void copyStringWithDefault(String key, ContentValues from, ContentValues to, String defaultValue) {
         copyString(key, from, to);
         if (!to.containsKey(key)) {
             to.put(key, defaultValue);

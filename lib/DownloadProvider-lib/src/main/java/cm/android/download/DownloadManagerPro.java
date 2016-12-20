@@ -10,11 +10,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import cm.android.sdk.content.BaseBroadcastReceiver;
-import cm.java.util.ObjectUtil;
+import cm.android.download.util.BaseBroadcastReceiver;
 
 public class DownloadManagerPro {
 
@@ -214,8 +214,7 @@ public class DownloadManagerPro {
         void onDownloadFailure(DownloadManager.Query downloadQuery);
     }
 
-    private Set<OnCompleteListener> onCompleteListeners = ObjectUtil
-            .newHashSet();
+    private Set<OnCompleteListener> onCompleteListeners = new HashSet<>();
 
     private final OnCompleteListener listener = new OnCompleteListener() {
         @Override

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,32 +21,58 @@ import android.widget.Toast;
 
 import cm.android.download.DownloadManager;
 import cm.android.download.DownloadManagerPro;
+import cm.android.download.ProgressManager;
+import cm.android.download.providers.downloads.DownloadService;
 import cm.android.download.ui.R;
+
+import static com.android.providers.downloads.ui.MyApp.setDownload;
 
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
     private DownloadManagerPro downloadManager = new DownloadManagerPro();
 
+    private ProgressManager mManager = null;
+
+    Button btnStart = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        TestSecureIO.show(this);
+//        TestSecureIO.testEncryptConceal(this);
+//        TestSecureIO.testDescrypt(this);
 
 //        downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
         downloadManager.init(this);
-        Button btnStart = (Button) findViewById(R.id.start);
+        btnStart = (Button) findViewById(R.id.start);
         Button btnSttop = (Button) findViewById(R.id.stop);
         Button btnLook = (Button) findViewById(R.id.look);
         btnStart.setOnClickListener(this);
         btnSttop.setOnClickListener(this);
         btnLook.setOnClickListener(this);
+
+        Button btnPause = (Button) findViewById(R.id.pause);
+        Button btnResume = (Button) findViewById(R.id.resume);
+
+        btnPause.setOnClickListener(this);
+        btnResume.setOnClickListener(this);
+
+        mManager = new ProgressManager();
+        mManager.init(this, new ProgressManager.DownloadCallback() {
+            @Override
+            public void onChange() {
+                handler.sendEmptyMessage(0);
+            }
+        });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         downloadManager.deInit();
+        mManager.deInit();
     }
 
     @Override
@@ -88,7 +115,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 DownloadManager.ACTION_NOTIFICATION_CLICKED);
         this.registerReceiver(receiver2, filter22);
 
-        startQuery(mDownloadId);
+//        startQuery(mDownloadId);
         super.onResume();
     }
 
@@ -100,9 +127,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
         int id = view.getId();
         if (id == R.id.start) {
             DownloadManager.Request request = new DownloadManager.Request(
-                    Uri.parse(
-                            "http://dl.coolapk.com/dl5.php?url=%2Fapk%2Fcom.netease.vopen&apkname=com.netease.vopen&version=3.1.1&filename=%E7%BD%91%E6%98%93%E5%85%AC%E5%BC%80%E8%AF%BE&file=%2Fapk_file%2F2014%2F1210%2Fcom.netease.vopen-3.1.1.apk&extra=0&h=39d84b94ngdaxh"));
-
+                    Uri.parse(TestUrl.url));
+            setDownload();
             request.setAllowedNetworkTypes(
                     DownloadManager.Request.NETWORK_MOBILE
                             | DownloadManager.Request.NETWORK_WIFI)
@@ -110,15 +136,48 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     .setTitle("更新") // 用于信息查看
                     .setDescription("下载apk") // 用于信息查看
                     .setDestinationInExternalPublicDir(
-                            Environment.DIRECTORY_DOWNLOADS, "test.zip");
+                            Environment.DIRECTORY_DOWNLOADS, "test.txt");
             request.setVisibleInDownloadsUi(true);
-            mDownloadId = downloadManager.enqueue(request); // 加入下载队列
 
-            startQuery(mDownloadId);
+            request.setNotificationVisibility(
+                    DownloadManager.Request.VISIBILITY_VISIBLE);
+
+//            request.setNeedEncrypt(false);
+            mDownloadId = downloadManager.enqueue(request); // 加入下载队列
+            Log.i("ggg", "ggg start mDownloadId = " + mDownloadId);
+//            startQuery(mDownloadId);
         }
         if (id == R.id.stop) {
+            Log.e("ggg", "ggg stop");
             stopQuery();
-            removeDownload(mDownloadId);
+            Log.i("ggg", "ggg stop mDownloadId = " + mDownloadId);
+
+            int gggid = removeDownload(mDownloadId);
+            Log.e("ggg", "ggggggg id = " + gggid);
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        Intent intent = new Intent();
+                        intent.setClass(MainActivity.this, DownloadService.class);
+//                        MainActivity.this.startService(intent);
+                    }
+                }
+            }).start();
+        }
+
+        if (R.id.pause == id) {
+            downloadManager.pause(mDownloadId);
+        }
+
+        if (R.id.resume == id) {
+            downloadManager.resume(mDownloadId);
         }
         if (id == R.id.look) {
             lookDownload();
@@ -126,6 +185,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     private int removeDownload(long downloadId) {
+
         return downloadManager.remove(downloadId);
     }
 
@@ -133,8 +193,52 @@ public class MainActivity extends Activity implements View.OnClickListener {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+
+            /*
+            DownloadInfo info = (DownloadInfo)msg.obj;
+            long current = info.mCurrentBytes;
+            long total = info.mTotalBytes;
+            if (total > 0){
+                int percent = (int)(current * 100 / total);
+                if (percent < 100){
+                    btnStart.setTextColor(Color.WHITE);
+                    btnStart.setText(percent + "%");
+                }else {
+                    btnStart.setText("start");
+                }
+            }
+            */
+            refresh();
         }
     };
+
+    private void refresh() {
+        DownloadManager.Query query = new DownloadManager.Query().setFilterById(mDownloadId);
+        Cursor cursor = downloadManager.query(query);
+        if (cursor == null) {
+            return;
+        }
+        while (cursor.moveToNext()) {
+            int status = cursor.getInt(cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS));
+            if (status == DownloadManager.STATUS_PENDING
+                    || status == DownloadManager.STATUS_RUNNING) {
+                long current = cursor.getLong(cursor.getColumnIndexOrThrow(
+                        DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                long total = cursor.getLong(
+                        cursor.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+
+                if (total > 0) {
+                    int percent = (int) (current * 100 / total);
+                    if (percent < 100) {
+                        btnStart.setTextColor(Color.WHITE);
+                        btnStart.setText(percent + "%");
+                    } else {
+                        btnStart.setText("start");
+                    }
+                }
+            }
+        }
+    }
 
     int step = 1000;
 
