@@ -3,10 +3,7 @@ package cm.android.download.util;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import android.content.ContentResolver;
-import android.content.Context;
 import android.database.Cursor;
-import android.widget.Toast;
 
 import java.io.Closeable;
 import java.io.File;
@@ -14,9 +11,6 @@ import java.io.InputStream;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-
-import cm.android.download.R;
-import cm.android.download.provider.Downloads;
 
 /**
  * IO读写Util类
@@ -88,31 +82,31 @@ public class Util {
         return true;
     }
 
-    public static void showFailedToast(Context context, long downloadId) {
-        if (context == null || downloadId < 0) {
-            return;
-        }
-
-        ContentResolver resolver = context.getApplicationContext().getContentResolver();
-        String selection = Downloads.Impl._ID + " = ? ";
-        String[] selectionArgs = new String[]{String.valueOf(downloadId)};
-
-        Cursor cursor = null;
-        try {
-            cursor = resolver.query(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI,
-                    null, selection, selectionArgs, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                int columnIndex = cursor.getColumnIndexOrThrow(Downloads.Impl.COLUMN_STATUS);
-                int errorCode = cursor.getInt(columnIndex);
-                String errorMsg = cursor
-                        .getString(cursor.getColumnIndexOrThrow(Downloads.Impl.COLUMN_ERROR_MSG));
-                Toast.makeText(context,
-                        context.getString(R.string.download_failed, errorCode),
-                        Toast.LENGTH_SHORT).show();
-            }
-        } finally {
-            Util.closeQuietly(cursor);
-        }
-    }
+//    public static void showFailedToast(Context context, long downloadId) {
+//        if (context == null || downloadId < 0) {
+//            return;
+//        }
+//
+//        ContentResolver resolver = context.getApplicationContext().getContentResolver();
+//        String selection = Downloads.Impl._ID + " = ? ";
+//        String[] selectionArgs = new String[]{String.valueOf(downloadId)};
+//
+//        Cursor cursor = null;
+//        try {
+//            cursor = resolver.query(Downloads.Impl.ALL_DOWNLOADS_CONTENT_URI,
+//                    null, selection, selectionArgs, null);
+//            if (cursor != null && cursor.moveToFirst()) {
+//                int columnIndex = cursor.getColumnIndexOrThrow(Downloads.Impl.COLUMN_STATUS);
+//                int errorCode = cursor.getInt(columnIndex);
+//                String errorMsg = cursor
+//                        .getString(cursor.getColumnIndexOrThrow(Downloads.Impl.COLUMN_ERROR_MSG));
+//                Toast.makeText(context,
+//                        context.getString(R.string.download_failed, errorCode),
+//                        Toast.LENGTH_SHORT).show();
+//            }
+//        } finally {
+//            Util.closeQuietly(cursor);
+//        }
+//    }
 
 }

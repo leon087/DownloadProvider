@@ -13,7 +13,7 @@ buildscript {
     }
 
     ext {
-        cmGradleVersion = "1.51"
+        cmGradleVersion = "1.52"
     }
 
     dependencies {
