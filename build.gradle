@@ -19,7 +19,6 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
         classpath "ggg.android:cm.android.gradle:$cmGradleVersion"
-        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
     }
 }
 

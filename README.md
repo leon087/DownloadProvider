@@ -17,16 +17,27 @@ allprojects {
 }
 ```
 2. 添加依赖  
-```groovy
-    compile 'com.github.leon087:DownloadProvider:+'
+```groovy  
+compile 'com.github.leon087:DownloadProvider-lib:{latest_version}'
 ```
 
 3. 添加其他依赖  
-```groovy
-    compile 'com.google.guava:guava:19.0'
-    //log
-    compile "org.slf4j:slf4j-api:1.7.22"
-    compile "com.android.support:support-v13:+"
+```groovy  
+compile 'com.google.guava:guava:{latest_version}'  
+//log  
+compile "org.slf4j:slf4j-api:{latest_version}"  
+compile "com.android.support:support-v13:{latest_version}"  
 ```
+4. 修改Provider  
+```xml  
+<manifest xmlns:tools="http://schemas.android.com/tools">
 
+    <application>
+        <provider
+            android:name="cm.android.download.providers.downloads.DownloadProvider"
+            android:authorities="${applicationId}.download.provider"
+            tools:replace="android:authorities"/>
+    </application>
+</manifest>
+```
 

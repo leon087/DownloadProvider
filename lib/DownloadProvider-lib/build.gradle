@@ -3,9 +3,6 @@ tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
 apply plugin: 'com.android.library'
 apply from: "$rootDir/ext-android.gradle"
 
-apply plugin: 'com.github.dcendents.android-maven'
-group = 'com.github.leon087'
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
