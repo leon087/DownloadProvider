@@ -13,12 +13,12 @@ buildscript {
     }
 
     ext {
-        cmGradleVersion = "1.52"
+        cmGradleVersion = "1.60"
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.3'
-        classpath "ggg.android:cm.android.gradle:$cmGradleVersion"
+        classpath 'com.android.tools.build:gradle:2.3.2'
+        classpath "ggg.android:gradle-plugin:$cmGradleVersion"
     }
 }
 
@@ -50,7 +50,7 @@ allprojects {
         mavenLocal()
     }
 }
-task wrapper(type: Wrapper) { gradleVersion = '2.14.1' }
+//task wrapper(type: Wrapper) { gradleVersion = '3.5' }
 //apply plugin: 'android-reporting'
 
 ext {
@@ -58,7 +58,7 @@ ext {
     minSdkVersion = 16
     targetSdkVersion = 22//6.0动态权限适配
     compileSdkVersion = 23
-    buildToolsVersion = "25.0.2"
+    buildToolsVersion = "25.0.3"
 
     //checkstyle
     checkstyleExclude = [
@@ -101,3 +101,4 @@ ext {
     ]
 }
 apply plugin: 'cm.android.gradle.script'
+apply plugin: 'cm.android.gradle.publish'

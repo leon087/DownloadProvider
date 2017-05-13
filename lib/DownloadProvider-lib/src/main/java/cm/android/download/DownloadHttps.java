@@ -1,8 +1,5 @@
 package cm.android.download;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.content.Context;
 
 import java.io.InputStream;
@@ -25,8 +22,6 @@ import javax.net.ssl.X509TrustManager;
 import cm.android.download.util.Util;
 
 public class DownloadHttps {
-    private static final Logger logger = LoggerFactory.getLogger("download");
-
 //    public static final void wrap(URLConnection urlConnection) {
 //        if (urlConnection instanceof HttpsURLConnection) {
 ////            SSLSocketFactory sslSocketFactory = HttpsURLConnection.getDefaultSSLSocketFactory();

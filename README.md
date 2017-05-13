@@ -18,7 +18,8 @@ allprojects {
 ```
 2. 添加依赖  
 ```groovy  
-compile 'com.github.leon087:DownloadProvider:{latest_version}'
+//jitpack默认group为:com.github.{username}
+compile '{group}:DownloadProvider:{latest_version}'
 ```
 
 3. 添加其他依赖  

@@ -16,7 +16,7 @@ buildscript {
 //    }
 
     dependencies {
-        classpath "ggg.android:cm.android.gradle:$cmGradleVersion"
+        classpath "ggg.android:gradle-plugin:$cmGradleVersion"
     }
 }
 

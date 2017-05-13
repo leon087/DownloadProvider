@@ -1137,6 +1137,8 @@ public final class DownloadProvider extends ContentProvider {
             }
 
             copyInteger(Downloads.Impl.COLUMN_CONTROL, values, filteredValues);
+            //TODO lg 2017-03-04 mediaScan 解决一直扫描bug
+            copyInteger(Downloads.Impl.COLUMN_MEDIA_SCANNED, values, filteredValues);
             copyString(Downloads.Impl.COLUMN_TITLE, values, filteredValues);
             copyString(Downloads.Impl.COLUMN_MEDIAPROVIDER_URI, values,
                     filteredValues);

@@ -1,8 +1,5 @@
 package cm.android.download.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.database.Cursor;
 
 import java.io.Closeable;
@@ -18,8 +15,6 @@ import java.security.cert.CertificateFactory;
 public class Util {
 
     private static final int BUF_SIZE = 8 * 1024;
-
-    private static final Logger logger = LoggerFactory.getLogger("util");
 
     private Util() {
     }
@@ -38,7 +33,7 @@ public class Util {
         } catch (RuntimeException rethrown) {
             throw rethrown;
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LogUtil.getLogger().error(e.getMessage(), e);
         }
     }
 
@@ -60,7 +55,7 @@ public class Util {
             cf = CertificateFactory.getInstance("X.509");
             return cf.generateCertificate(is);
         } catch (CertificateException e) {
-            logger.error(e.getMessage(), e);
+            LogUtil.getLogger().error(e.getMessage(), e);
             return null;
         }
 //        Log.i("Longer", "ca=" + ((X509Certificate) ca).getSubjectDN());

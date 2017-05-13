@@ -19,8 +19,6 @@ package cm.android.download;
 //import android.annotation.SdkConstant;
 //import android.annotation.SdkConstant.SdkConstantType;
 
-import org.slf4j.LoggerFactory;
-
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
@@ -549,7 +547,7 @@ public class DownloadManager {
          *                               created.
          */
         public Request setDestinationInExternalFilesDir(Context context,
-                String dirType, String subPath) {
+                                                        String dirType, String subPath) {
             final File file = context.getExternalFilesDir(dirType);
             if (file == null) {
                 throw new IllegalStateException(
@@ -587,7 +585,7 @@ public class DownloadManager {
          *                               created.
          */
         public Request setDestinationInExternalPublicDir(String dirType,
-                String subPath) {
+                                                         String subPath) {
             File file = Environment.getExternalStoragePublicDirectory(dirType);
             if (file == null) {
                 throw new IllegalStateException(
@@ -609,7 +607,7 @@ public class DownloadManager {
         }
 
         public Request setDestinationInExternalPublicDir(File file,
-                String subPath) {
+                                                         String subPath) {
             if (file == null) {
                 throw new IllegalStateException(
                         "Failed to get external storage public directory");
@@ -858,7 +856,7 @@ public class DownloadManager {
         }
 
         private void putIfNonNull(ContentValues contentValues, String key,
-                Object value) {
+                                  Object value) {
             if (value != null) {
                 contentValues.put(key, value.toString());
             }
@@ -967,7 +965,7 @@ public class DownloadManager {
          * @return the Cursor returned by ContentResolver.query()
          */
         Cursor runQuery(ContentResolver resolver, String[] projection,
-                Uri baseUri) {
+                        Uri baseUri) {
             Uri uri = baseUri;
             List<String> selectionParts = new ArrayList<String>();
             String[] selectionArgs = null;
@@ -1420,8 +1418,8 @@ public class DownloadManager {
      * this download.
      */
     public long addCompletedDownload(String title, String description,
-            boolean isMediaScannerScannable, String mimeType, String path,
-            long length, boolean showNotification) {
+                                     boolean isMediaScannerScannable, String mimeType, String path,
+                                     long length, boolean showNotification) {
         return addCompletedDownload(title, description,
                 isMediaScannerScannable, mimeType, path, length,
                 showNotification, false);
@@ -1431,8 +1429,8 @@ public class DownloadManager {
      * {@hide}
      */
     public long addCompletedDownload(String title, String description,
-            boolean isMediaScannerScannable, String mimeType, String path,
-            long length, boolean showNotification, boolean allowWrite) {
+                                     boolean isMediaScannerScannable, String mimeType, String path,
+                                     long length, boolean showNotification, boolean allowWrite) {
         // make sure the input args are non-null/non-zero
         validateArgumentIsNonEmpty("title", title);
         validateArgumentIsNonEmpty("description", description);

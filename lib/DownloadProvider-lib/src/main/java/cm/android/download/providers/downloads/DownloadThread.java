@@ -16,9 +16,6 @@
 
 package cm.android.download.providers.downloads;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.drm.DrmManagerClient;
@@ -44,6 +41,7 @@ import java.net.URLConnection;
 
 import cm.android.download.provider.Downloads;
 import cm.android.download.providers.downloads.DownloadInfo.NetworkState;
+import cm.android.download.util.LogUtil;
 import cm.android.download.util.Util;
 
 import static android.text.format.DateUtils.SECOND_IN_MILLIS;
@@ -79,8 +77,6 @@ public class DownloadThread implements Runnable {
 
     // TODO: bind each download to a specific network interface to avoid state
     // checking races once we have ConnectivityManager API
-
-    private static Logger mLogger = LoggerFactory.getLogger("DownloadThread");
 
     private static final int HTTP_REQUESTED_RANGE_NOT_SATISFIABLE = 416;
 
@@ -349,7 +345,7 @@ public class DownloadThread implements Runnable {
                 }
                 final int responseCode = conn.getResponseCode();
                 //TODO CMCC
-                mLogger.info("responseCode = " + responseCode);
+                LogUtil.getLogger().info("responseCode = " + responseCode);
                 switch (responseCode) {
                     case HTTP_OK:
                         if (state.mContinuingDownload) {
@@ -734,7 +730,7 @@ public class DownloadThread implements Runnable {
             values.put(Downloads.Impl.COLUMN_MIME_TYPE, state.mMimeType);
         }
 
-        mLogger.info("updateDatabaseFromHeaders state = {}, totalSize ={} ", state.toString(),
+        LogUtil.getLogger().info("updateDatabaseFromHeaders state = {}, totalSize ={} ", state.toString(),
                 mInfo.mTotalBytes);
 //        values.put(Downloads.Impl.COLUMN_TOTAL_BYTES, mInfo.mTotalBytes);
         values.put(Downloads.Impl.COLUMN_TOTAL_BYTES, state.mTotalBytes);
@@ -756,7 +752,7 @@ public class DownloadThread implements Runnable {
         state.mHeaderETag = conn.getHeaderField("ETag");
 
         final String transferEncoding = conn.getHeaderField("Transfer-Encoding");
-        mLogger.info("transferEncoding = " + transferEncoding);
+        LogUtil.getLogger().info("transferEncoding = " + transferEncoding);
         if (transferEncoding == null) {
             state.mContentLength = getHeaderFieldLong(conn, "Content-Length", -1);
         } else {
@@ -946,7 +942,7 @@ public class DownloadThread implements Runnable {
 
     /**
      * Return if given status is eligible to be treated as
-     * {@link me.android.download.provider.Downloads.Impl#STATUS_WAITING_TO_RETRY}.
+     * {@link cm.android.download.provider.Downloads.Impl#STATUS_WAITING_TO_RETRY}.
      */
     public static boolean isStatusRetryable(int status) {
         switch (status) {

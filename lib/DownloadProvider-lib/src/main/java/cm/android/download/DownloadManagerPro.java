@@ -1,8 +1,5 @@
 package cm.android.download;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -15,10 +12,9 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import cm.android.download.util.BaseBroadcastReceiver;
+import cm.android.download.util.LogUtil;
 
 public class DownloadManagerPro {
-
-    private static final Logger logger = LoggerFactory.getLogger("download");
 
     private DownloadManager downloadManager;
 
@@ -180,7 +176,7 @@ public class DownloadManagerPro {
 
                     status = cursor.getInt(mStatusColumnId);
                 } else {
-                    logger.error("cursor = {}", cursor);
+                    LogUtil.getLogger().error("cursor = {}", cursor);
                 }
             } finally {
                 if (cursor != null) {
@@ -188,7 +184,7 @@ public class DownloadManagerPro {
                 }
             }
 
-            logger.info("status = " + status);
+            LogUtil.getLogger().info("status = " + status);
             if (status == DownloadManager.STATUS_SUCCESSFUL) {
 //                    Toast.makeText(context, "下载成功", Toast.LENGTH_SHORT).show();
                 listener.onDownloadSuccess(myDownloadQuery);
